@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <link type="text/css" rel="stylesheet" href="../catcorr.css"/>
+    <link type="text/css" rel="stylesheet" href="tipsy.css"/>
+  </head>
+  <body>
+    <h2 style="font-size:24px;">example usage</h2>
+    
+    <!-- a div to contain all of the charts -->
+    <div id="charts">
+    </div>
+
+    <!-- an aside to display the total number of entries selected -->
+    <!-- TODO: should probably be rendered by catcorr -->
+    <aside id="totals">yo hal! you've selected <br/> <span id="active">-</span> <span>/</span> <span id="total">-</span> <br/> respondents.</aside>
+
+    <!-- hard dependencies -->
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://raw.github.com/square/crossfilter/v1.2.0/crossfilter.min.js"></script>
+    <!-- <script src="crossfilter.v1.1.3.min.js"></script> -->
+    <!-- <script src="d3.v2.min.js"></script> -->
+    <script src="../catcorr.js"></script>
+
+    <!-- <\!-- optional for nice tooltips -\-> -->
+    <!-- <script src="jquery-1.7.min.js"></script> -->
+    <!-- <script src="jquery.tipsy.js"></script> -->
+
+    <!-- where all the action is -->
+    <script src="data.json"></script>
+    <script>
+      var cc = catcorr("#charts", data_json);
+    </script>
+  </body>
+</html>
