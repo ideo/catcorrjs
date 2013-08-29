@@ -10,8 +10,12 @@ import optparse
 
 parser = optparse.OptionParser(description=__doc__)
 parser.add_option(
-    "-n", dest="n_respondents", default=100, type="int",
-    help="number of survey respondents", 
+    "-n", dest="nice_respondents", default=100, type="int",
+    help="number of survey respondents that try to answer questions", 
+)
+parser.add_option(
+    "-a", dest="asshole_respondents", default=10, type="int",
+    help="number of assholes that try to finish as quickly as possible", 
 )
 opts, args = parser.parse_args()
 
@@ -40,7 +44,7 @@ question_and_choice_list = [
 # preference for lower choices and 'even' people having a slight
 # preference for higher choices
 data = []
-for i in xrange(opts.n_respondents):
+for i in xrange(opts.nice_respondents):
     responses = {}
     for q_number, (question, choices) in enumerate(question_and_choice_list):
         n = int(0.7*len(choices))
@@ -49,6 +53,13 @@ for i in xrange(opts.n_respondents):
         else:
             choice = random.choice(choices[-n:])
         responses[q_number+1] = choice
+    data.append(responses)
+
+# these jerks just click on the first thing they see to finish as
+# quickly as possible
+for i in xrange(opts.asshole_respondents):
+    for q_number, (question, choices) in enumerate(question_and_choice_list):
+        responses[q_number+1] = choices[0]
     data.append(responses)
 
 # write it out all purty in a useful javascript file for this example
