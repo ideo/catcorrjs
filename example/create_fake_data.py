@@ -43,8 +43,10 @@ question_and_choice_list = [
 ]
 
 questions = []
-for q in question_and_choice_list:
-    questions.append({"type":q[0], "text": q[1], "choices": q[2]})
+for i, q in enumerate(question_and_choice_list):
+    questions.append(
+        {"number": i+1, "type":q[0], "text": q[1], "choices": q[2]}
+    )
 
 # generate a bunch of fake data, with 'odd' people having a slight
 # preference for lower choices and 'even' people having a slight
