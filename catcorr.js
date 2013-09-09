@@ -16,7 +16,15 @@ function catcorr(div_id, data) {
 	});
     });
 
-    // add the questions
+    // re-cast non-numeric answers into the corresponding number in
+    // label2index so that this whole crossfilter bizness works
+    responses.forEach(function (r, i) {
+	questions.forEach(function (q, j) {
+	    r[q.number] = label2index[q.number][r[q.number]];
+	});
+    });
+
+    // add the questions text 
     questions.forEach(function (q, i) {
     	d3.select(div_id)
     	    .append("div")
@@ -82,7 +90,7 @@ function catcorr(div_id, data) {
         yscale = d3.scale.linear()
     	    .range([100, 0])
     	    .domain([0, groups[i].top(1)[0].value]);
-    	yscales.push(yscale)
+    	yscales.push(yscale);
 
     	// create the chart
     	chart = barChart(q).dimension(dimensions[i])
@@ -287,7 +295,7 @@ function catcorr(div_id, data) {
     		d;
     		while (++i < n) {
     		    d = groups[i];
-    		    path.push("M", x(d.key-0.5)+1, ",", 
+    		    path.push("M", x(i-0.5)+1, ",", 
     			      height, "V", y(d.value), "h",bar_width-2,
     			      "V", height);
     		}
@@ -300,11 +308,10 @@ function catcorr(div_id, data) {
     		n = groups.length,
     		g, p,
     		a = all.value();
-
     		while (++i < n) {
     		    g = groups[i];
     		    p = a/responses.length*group.__all__[i];
-    		    path.push("M", x(g.key-0.5), ",", y(p), "h", bar_width);
+    		    path.push("M", x(i-0.5), ",", y(p), "h", bar_width);
     		}
     		return path.join("");
     	    }
