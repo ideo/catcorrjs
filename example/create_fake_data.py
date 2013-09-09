@@ -29,17 +29,17 @@ question_and_choice_list = [
     
     # type, text, choices
     ("outcome", "Do survey analysis tools make you want to barf?", scale1to10),
-    ("outcome", "Do you love the Excel blue, pink, ... color scheme?", yesno),
-    ("outcome", "Survey monkey is sweet", agreement),
-    ("outcome", "Google forms tells me everything I need to know.", agreement),
+    # ("outcome", "Do you love the Excel blue, pink, ... color scheme?", yesno),
+    # ("outcome", "Survey monkey is sweet", agreement),
+    # ("outcome", "Google forms tells me everything I need to know.", agreement),
     ("outcome", "You can't get any better (or cheaper) than a PB&J.", scale1to10),
     ("outcome", "The lunch buffet is delicious.", scale1to10),
     ("outcome", "Any Chipoltletized food is perfect for take-out.", scale1to10),
     ("outcome", "Food trucks meet my criteria for culinary independence.", scale1to10),
     ("outcome", "I need a tablecloth and Perrier to properly digest lunch.", scale1to10),
-    ("demographic", "Gender", ["Male", "Female"]),
-    ("demographic", "Age", ["<20", "extremely old"]),
-    ("demographic", "Salary", ["$10/hr", "$30k/yr", "much more than that"]),
+    # ("demographic", "Gender", ["Male", "Female"]),
+    # ("demographic", "Age", ["<20", "extremely old"]),
+    # ("demographic", "Salary", ["$10/hr", "$30k/yr", "much more than that"]),
 ]
 
 questions = []
