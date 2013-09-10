@@ -221,9 +221,9 @@ function catcorr(div_id, data) {
 
     		    // manipulate the axis label text
     		    g.selectAll("g.axis text")
-    		    	.text(function (d, i) {
+    		    	.text(function (d) {
     		    	    var n = 20;
-    		    	    var s = x.labels[i];
+    		    	    var s = x.labels[d];
     		    	    if (s===undefined) {
     		    		return '';
     		    	    }
