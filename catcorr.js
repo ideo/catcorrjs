@@ -228,16 +228,6 @@ function catcorr(div_id, data) {
     		    	    return s;
     		    	})
 
-    		    // // add tooltip on hover to display the full question
-    		    // $("g.axis text").tipsy({
-    		    // 	gravity: 'n',
-    		    // 	html: true,
-    		    // 	title: function() {
-    		    // 	    var d=this.__data__;
-    		    // 	    return x.labels[d];
-    		    // 	}
-    		    // });
-		    
     		    // Initialize the brush component with pretty
     		    // resize handles.
     		    var gBrush = g.append("g")
