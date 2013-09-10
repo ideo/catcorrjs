@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Catcorrjs : Visualize correlations across many dimensions of categorical data (e.g., from a survey)" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Catcorrjs</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/deanmalmgren/catcorrjs">View on GitHub</a>
+
+          <h1 id="project_title">Catcorrjs</h1>
+          <h2 id="project_tagline">Visualize correlations across many dimensions of categorical data (e.g., from a survey)</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/deanmalmgren/catcorrjs/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/deanmalmgren/catcorrjs/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="catcorrjs" class="anchor" href="#catcorrjs"><span class="octicon octicon-link"></span></a>catcorr.js</h1>
+
+<p>So, you've designed the perfect survey. You're really going to be able
+to quantify exactly what types of people responded this time, aren't
+you? Oh yeah, you've got this whole thing figured out: "I'm just going
+to cluster those little buggers and this will all make so much more
+sense."</p>
+
+<p>And then you try to
+<a href="http://en.wikipedia.org/wiki/Cluster_analysis">cluster them into groups</a>.</p>
+
+<p>And you discover, yet again, that there aren't any useful or
+meaningful groups. Sad times.</p>
+
+<p>Enter catcorr.js --- short for _cat_egorical _corr_elation --- which
+makes it easy to visualize relationships between categorical variables
+(*e.g.*, results from a survey). The goal of this tool is not to
+identify a finite number of groups of people that summarize your
+population as a whole. Rather, the goal of catcorr.js is to make it
+possible to quickly visualize the actual data to generate hypotheses
+and visually evaluate the data in a useful way. Something like this:</p>
+
+<p>XXXX EMBED SCREENCAST VIDEO HERE</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>catcorr.js is built on top of <a href="d3js.org">d3.js</a> and
+<a href="http://square.github.io/crossfilter/">crossfilter.js</a>. The quick way
+to get started is to</p>
+
+<ol>
+<li>
+<p><em>Setup the html</em>. Insert a <code>div</code> into the body of your webpage and
+be sure to include the d3.js and crossfilter.js dependencies</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"example"</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"d3.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"crossfilter.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+</li>
+<li>
+<p><em>Format the json</em>. Compile your data into a json that holds the
+questions (*e.g.*, the dimensions of your classification) and the
+responses from all of the respondents:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">questions</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="nx">number</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">"outcome"</span><span class="p">,</span> <span class="nx">text</span><span class="o">:</span> <span class="s2">"Which came first?"</span><span class="p">,</span> <span class="nx">choices</span><span class="o">:</span> <span class="p">[</span><span class="s2">"chicken"</span><span class="p">,</span> <span class="s2">"egg"</span><span class="p">]},</span>
+    <span class="p">{</span><span class="nx">number</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">"outcome"</span><span class="p">,</span> <span class="nx">text</span><span class="o">:</span> <span class="s2">"How tall are you?"</span><span class="p">,</span> <span class="nx">choices</span><span class="o">:</span> <span class="p">[</span><span class="s2">"short"</span><span class="p">,</span> <span class="s2">"tall"</span><span class="p">]},</span>
+    <span class="p">{</span><span class="nx">number</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">"demographic"</span><span class="p">,</span> <span class="nx">text</span><span class="o">:</span> <span class="s2">"Gender"</span><span class="p">,</span> <span class="nx">choices</span><span class="o">:</span> <span class="p">[</span><span class="s2">"male"</span><span class="p">,</span> <span class="s2">"female"</span><span class="p">]},</span>
+    <span class="p">{</span><span class="nx">number</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span> <span class="nx">type</span><span class="o">:</span> <span class="s2">"demographic"</span><span class="p">,</span> <span class="nx">text</span><span class="o">:</span> <span class="s2">"Genus"</span><span class="p">,</span> <span class="nx">choices</span><span class="o">:</span> <span class="p">[</span><span class="s2">"amoeba"</span><span class="p">,</span> <span class="s2">"multi-cellular organism"</span><span class="p">]},</span>
+  <span class="p">],</span>
+  <span class="nx">responses</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="mi">1</span><span class="o">:</span> <span class="s2">"chicken"</span><span class="p">,</span> <span class="mi">2</span><span class="o">:</span> <span class="s2">"short"</span><span class="p">,</span> <span class="mi">3</span><span class="o">:</span> <span class="s2">"male"</span><span class="p">,</span> <span class="mi">4</span><span class="o">:</span> <span class="s2">"amoeba"</span><span class="p">},</span>
+    <span class="p">{</span><span class="mi">1</span><span class="o">:</span> <span class="s2">"egg"</span><span class="p">,</span> <span class="mi">2</span><span class="o">:</span> <span class="s2">"tall"</span><span class="p">,</span> <span class="mi">3</span><span class="o">:</span> <span class="s2">"male"</span><span class="p">,</span> <span class="mi">4</span><span class="o">:</span> <span class="s2">"multi-cellular organism"</span><span class="p">},</span>
+    <span class="p">{</span><span class="mi">1</span><span class="o">:</span> <span class="s2">"egg"</span><span class="p">,</span> <span class="mi">2</span><span class="o">:</span> <span class="s2">"tall"</span><span class="p">,</span> <span class="mi">3</span><span class="o">:</span> <span class="s2">"female"</span><span class="p">,</span> <span class="mi">4</span><span class="o">:</span> <span class="s2">"multi-cellular organism"</span><span class="p">},</span>
+    <span class="p">{</span><span class="mi">1</span><span class="o">:</span> <span class="s2">"chicken"</span><span class="p">,</span> <span class="mi">2</span><span class="o">:</span> <span class="s2">"tall"</span><span class="p">,</span> <span class="mi">3</span><span class="o">:</span> <span class="s2">"female"</span><span class="p">,</span> <span class="mi">4</span><span class="o">:</span> <span class="s2">"multi-cellular organism"</span><span class="p">},</span>
+    <span class="c1">// ...</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</li>
+<li>
+<p><em>catcorr time</em>. </p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">cc</span> <span class="o">=</span> <span class="nx">catcorr</span><span class="p">(</span><span class="s2">"#example"</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+</pre></div>
+</li>
+</ol><p>There is also a
+<a href="https://github.com/deanmalmgren/catcorrjs/blob/master/example/index.html">working example</a>. To
+view it, clone this repository, run <code>make</code>, and then open
+<code>example/index.html</code> in your browser.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Catcorrjs maintained by <a href="https://github.com/deanmalmgren">deanmalmgren</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-43894210-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
