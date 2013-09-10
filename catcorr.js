@@ -110,7 +110,14 @@ function catcorr(div_id, data) {
     		.on("brushend", renderAll); 
     	});
     
-    
+    // add an <aside> element that displays fraction of elements
+    // currently selected
+    d3.select(div_id)
+	.append("aside")
+	.attr("id", "totals")
+	.html("you've selected <br/> <span id='active'>-</span> <span>/</span> <span id='total'>-</span> <br/> respondents.")
+
+
     // Render the total.
     d3.selectAll("#total")
     	.text(formatNumber(respondents.size()));
