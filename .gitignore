@@ -11,8 +11,11 @@ pids
 logs
 results
 
+# NodeJS/NPM
+node_modules
 npm-debug.log
 
+#Examples
 example/data.json
 example/d3.min.js
 example/crossfilter.min.js
