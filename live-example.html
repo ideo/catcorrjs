@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="catcorr.js : example visualization of survey results" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://rawgithub.com/deanmalmgren/catcorrjs/master/catcorr.css">
+
+    <title>Lunch survey</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/deanmalmgren/catcorrjs">View on GitHub</a>
+
+          <h1 id="project_title">catcorr.js</h1>
+          <h2 id="project_tagline">Visualize correlations across many dimensions of categorical data</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/deanmalmgren/catcorrjs/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/deanmalmgren/catcorrjs/tarball/master">Download this project as a tar.gz file</a>
+	      <a class="" href="index.html">back to project page</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+
+	<section id="background-info">
+	  <p>
+	    These data were generated from
+	    a <a href="https://docs.google.com/a/datascopeanalytics.com/forms/d/16Z7ZFl_mIPcKGRQxELI_gbkVNB66HRjUqO0f6H7g7EY/viewform">nonsensical
+	      survey</a> at the announcement of catcorr.js. The data are
+	    live-updated
+	    from <a href="https://docs.google.com/a/datascopeanalytics.com/spreadsheet/ccc?key=0AiojUCBHn7gJdGVHMVlubGxLbjNEOGZqdjBGX0l6THc#gid=0">a
+	      google spreadsheet</a> in case you, too, would like to play
+	    with the data.
+	  </p>
+	  
+	  <p>
+	    To use catcorr.js, brush any dimension to reveal how the
+	    selected people answered other questions (darker bars) but
+	    without changing how everyone responded to the survey
+	    (lighter bars). As a means of comparison, the white lines
+	    indicate how the selected group would have answered the
+	    remaining questions if their answers were completely
+	    uncorrelated.
+	  </p>
+	</section>
+	<div id="example"></div>
+
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">catcorr.js maintained by <a href="https://github.com/deanmalmgren">deanmalmgren</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://rawgithub.com/square/crossfilter/v1.3.2/crossfilter.min.js"></script>
+    <script src="https://rawgithub.com/deanmalmgren/catcorrjs/master/catcorr.js"></script>
+    <script src="javascripts/live-example.js"></script>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-43894210-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
