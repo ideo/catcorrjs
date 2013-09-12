@@ -11,7 +11,7 @@ for revealing patterns and tendency of the people in question.
 
 Other links:
 
-* [Live example](http://deanmalmgren.github.io/catcorrjs/) based on
+* [Live example](http://deanmalmgren.github.io/catcorrjs/live-example.html) based on
   [this nonsensical survey](https://docs.google.com/a/datascopeanalytics.com/forms/d/16Z7ZFl_mIPcKGRQxELI_gbkVNB66HRjUqO0f6H7g7EY/viewform)
 * [Official documentation](http://deanmalmgren.github.io/catcorrjs/).
 * [Contribution guidelines](CONTRIBUTING.md)
