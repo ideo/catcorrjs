@@ -1,0 +1,43 @@
+body {
+  font-family: "Helvetica Neue";
+  width: 100%;
+}
+
+#body {
+  position: relative;
+}
+
+footer {
+  padding: 2em 0 1em 0;
+  font-size: 12px;
+}
+
+h1 {
+  font-size: 96px;
+  margin-top: .3em;
+  margin-bottom: 0;
+}
+
+h1 + h2 {
+  margin-top: 0;
+}
+
+h2 {
+  font-weight: 400;
+  font-size: 28px;
+}
+
+h1, h2 {
+  font-family: "Yanone Kaffeesatz";
+  text-rendering: optimizeLegibility;
+}
+
+#body > p {
+  line-height: 1.5em;
+  width: 640px;
+  text-rendering: optimizeLegibility;
+}
+
+#charts {
+  padding: 10px 0;
+}
