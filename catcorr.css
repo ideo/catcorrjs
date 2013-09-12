@@ -1,113 +1,69 @@
 @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700);
 
-body {
-  font-family: "Helvetica Neue";
-  width: 100%;
-}
-
-#body {
-  position: relative;
-}
-
-footer {
-  padding: 2em 0 1em 0;
-  font-size: 12px;
-}
-
-h1 {
-  font-size: 96px;
-  margin-top: .3em;
-  margin-bottom: 0;
-}
-
-h1 + h2 {
-  margin-top: 0;
-}
-
-h2 {
-  font-weight: 400;
-  font-size: 28px;
-}
-
-h1, h2 {
-  font-family: "Yanone Kaffeesatz";
-  text-rendering: optimizeLegibility;
-}
-
-#body > p {
-  line-height: 1.5em;
-  width: 640px;
-  text-rendering: optimizeLegibility;
-}
-
-#charts {
-  padding: 10px 0;
-}
-
-.chart {
+.catcorr.chart {
   display: inline-block;
   height: 151px;
   margin-bottom: 20px;
 }
 
-.reset {
+.catcorr.reset {
   padding-left: 1em;
   font-size: smaller;
   color: #ccc;
 }
 
-.all_background.all_bar.outcome {
+.catcorr.all_background.all_bar.outcome {
   fill: rgb(107,174,214);
 }
-.background.bar.outcome {
+.catcorr.background.bar.outcome {
   fill: rgb(189,215,231);
 }
-.foreground.bar.outcome, .brush rect.extent.outcome {
+.catcorr.foreground.bar.outcome, .brush rect.extent.outcome {
   fill: rgb(49,130,189);
 }
 
-.all_background.all_bar.demographic {
+.catcorr.all_background.all_bar.demographic {
   fill: rgb(116,196,118);
 }
-.background.bar.demographic {
+.catcorr.background.bar.demographic {
   fill: rgb(186, 228, 179);
 }
-.foreground.bar.demographic, .brush rect.extent.demographic {
+.catcorr.foreground.bar.demographic, .catcorr.brush rect.extent.demographic {
   fill: rgb(49, 163, 84);
 }
 
-.all_proportion.all_bar {
+.catcorr.all_proportion.all_bar {
   stroke: white;
   stroke-width: 1;
   /* stroke-dasharray: 9,5; */
 }
 
-.brush rect.extent {
+.catcorr.brush rect.extent {
   fill-opacity: .125;
 }
 
-.axis path, .axis line {
+.catcorr.axis path, .catcorr.axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
 }
 
-.axis text {
+.catcorr.axis text {
   font: 10px sans-serif;
 }
 
-.brush .resize path {
+.catcorr.brush .resize path {
   fill: #eee;
   stroke: #666;
 }
 
-aside {
+aside.catcorr {
   float: right;
   color: #aaa;
   text-align: center;
 }
 
-aside span {
+aside.catcorr span {
   font-size: 80px;
   color: #666;
   font-family: "Yanone Kaffeesatz";

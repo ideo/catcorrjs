@@ -29,7 +29,7 @@ function catcorr(div_id, data) {
     	d3.select(div_id)
     	    .append("div")
     	    .attr("id", q.number+"-chart")
-    	    .attr("class", "chart")
+    	    .attr("class", "catcorr chart")
     	    .append("div")
     	    .attr("class", "title")
     	    .text(q.number+'. '+q.text);
@@ -103,7 +103,7 @@ function catcorr(div_id, data) {
     // Given our array of charts, which we assume are in the same order as the
     // .chart elements in the DOM, bind the charts to the DOM and render them.
     // We also listen to the chart's brush events to update the display.
-    var chart = d3.selectAll(".chart")
+    var chart = d3.selectAll(".catcorr.chart")
     	.data(charts)
     	.each(function(chart) { 
     	    chart.on("brush", renderAll)
@@ -115,11 +115,12 @@ function catcorr(div_id, data) {
     d3.select(div_id)
 	.append("aside")
 	.attr("id", "totals")
+        .attr("class", "catcorr")
 	.html("you've selected <br/> <span id='active'>-</span> <span>/</span> <span id='total'>-</span> <br/> respondents.")
 
 
     // Render the total.
-    d3.selectAll("#total")
+    d3.selectAll("aside.catcorr #total")
     	.text(formatNumber(respondents.size()));
     
     renderAll();
@@ -132,7 +133,7 @@ function catcorr(div_id, data) {
     // Whenever the brush moves, re-rendering everything.
     function renderAll() {
     	chart.each(render);
-    	d3.select("#active").text(formatNumber(all.value()));
+    	d3.select("aside.catcorr #active").text(formatNumber(all.value()));
     }
     
     window.filter = function(filters) {
@@ -180,7 +181,7 @@ function catcorr(div_id, data) {
     		if (g.empty()) {
     		    div.select(".title").append("a")
     			.attr("href", "javascript:reset(" + id + ")")
-    			.attr("class", "reset")
+    			.attr("class", "catcorr reset")
     			.text("reset")
     			.style("display", "none");
 		    
@@ -202,12 +203,12 @@ function catcorr(div_id, data) {
     			.enter().append("path")
     			.attr("class", function(d, i) { 
     			    if (i===0){
-    				return d + " all_bar " + question.type;
+    				return "catcorr "+d+" all_bar "+question.type;
     			    }
     			    else if(i===3) {
-    				return d + " all_bar " + question.type;
+    				return "catcorr "+d+" all_bar "+question.type;
     			    }
-    			    return d + " bar " + question.type; 
+    			    return "catcorr "+d+" bar "+question.type; 
     			})
     			.datum(group.all());
 
@@ -215,7 +216,7 @@ function catcorr(div_id, data) {
     			.attr("clip-path", "url(#clip-" + id + ")");
 		    
     		    g.append("g")
-    		    	.attr("class", "axis")
+    		    	.attr("class", "catcorr axis")
     		    	.attr("transform", "translate(0," + height + ")")
     		    	.call(axis);
 
@@ -238,7 +239,7 @@ function catcorr(div_id, data) {
     		    // Initialize the brush component with pretty
     		    // resize handles.
     		    var gBrush = g.append("g")
-    			.attr("class", "brush")
+    			.attr("class", "catcorr brush")
     			.call(brush);
     		    gBrush.selectAll("rect")
     			.attr("height", height);
@@ -271,7 +272,8 @@ function catcorr(div_id, data) {
     		g.selectAll(".bar").attr("d", barPath);
 
     		// only render the .all_bar data once at the beginning
-    		g.selectAll(".all_background.all_bar").attr("d", function (groups, i) {
+    		g.selectAll(".all_background.all_bar")
+		    .attr("d", function (groups, i) {
     		    var v = d3.select(this).attr("d");
     		    if (v===null) {
     			return barPath(groups, i);
