@@ -159,11 +159,6 @@ function catcorr(div_id, data) {
 	    // create ticks at these particular values
     	    axis.tickValues(d3.range(0,d3.keys(x.labels).length));
 
-    	// d3.entries(reverse_lookup).forEach(function (o) {
-    	//     labels[o.value] = o.key;
-    	// });
-	// console.log(labels);
-
     	    // // don't rescale the y-axis. can always revert if it
     	    // // becomes too difficult to see actual numbers, but
     	    // // this is necessary in order to display bars for all
@@ -291,7 +286,7 @@ function catcorr(div_id, data) {
     		d;
     		while (++i < n) {
     		    d = groups[i];
-    		    path.push("M", x(i-0.5)+1, ",", 
+    		    path.push("M", x(d.key-0.5)+1, ",", 
     			      height, "V", y(d.value), "h",bar_width-2,
     			      "V", height);
     		}
@@ -307,7 +302,7 @@ function catcorr(div_id, data) {
     		while (++i < n) {
     		    g = groups[i];
     		    p = a/responses.length*group.__all__[i];
-    		    path.push("M", x(i-0.5), ",", y(p), "h", bar_width);
+    		    path.push("M", x(g.key-0.5), ",", y(p), "h", bar_width);
     		}
     		return path.join("");
     	    }
