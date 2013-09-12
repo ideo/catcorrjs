@@ -64,25 +64,17 @@ function catcorr(div_id, data) {
     first_pass;
     questions.forEach(function (q, i) {
 
-    	// get the unique values and then sort based on the index
-    	var indices = d3.nest()
-    	    .key(function(p) {return p[q.number]})
-    	    .entries(responses)
-    	    .map(function(p) {return Number(p.key)});
-
-    	// get the labels corresponding with these indices
-	var reverse_lookup = label2index[q.number];
+    	// get the labels for this axis
     	var labels = {};
-    	d3.entries(reverse_lookup).forEach(function (o) {
-    	    labels[o.value] = o.key;
-    	});
+	q.choices.forEach(function (choice, c) {
+	    labels[c] = choice;
+	});
 
     	// create the scale
-    	var a=d3.min(indices), b=d3.max(indices);
+    	var a=0, b=q.choices.length-1;
     	xscale = d3.scale.linear()
-            .domain([a-0.5, b+0.5])
+            .domain([-0.5, b+0.5])
             .rangeRound([0, bar_width*((b-a)+1)])
-    	xscale.indices = indices;
     	xscale.labels = labels;
     	xscales.push(xscale);
 	
@@ -165,7 +157,12 @@ function catcorr(div_id, data) {
             height = d3.max(y.range());
 
 	    // create ticks at these particular values
-    	    axis.tickValues(x.indices);
+    	    axis.tickValues(d3.range(0,d3.keys(x.labels).length));
+
+    	// d3.entries(reverse_lookup).forEach(function (o) {
+    	//     labels[o.value] = o.key;
+    	// });
+	// console.log(labels);
 
     	    // // don't rescale the y-axis. can always revert if it
     	    // // becomes too difficult to see actual numbers, but
