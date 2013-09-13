@@ -56,7 +56,8 @@
         });
 
         // create a chart for each dimension
-        var xscales = [], xscale, yscales = [], yscale;
+        var xscales = [], xscale;
+	var yscale = d3.scale.linear().range([100,0]);
         var charts = [], chart;
         var bar_width = 80;
         questions.forEach(function (q, i) {
@@ -75,11 +76,12 @@
             xscale.labels = labels;
             xscales.push(xscale);
 
-            // only scale the y-axis once
-            yscale = d3.scale.linear()
-                .range([100, 0])
-                .domain([0, groups[i].top(1)[0].value]);
-            yscales.push(yscale);
+            // update the yscale to have the maximal possible domain
+            // so that heights (and areas) on each of the charts mean
+            // the same thing
+	    yscale.domain([0, d3.max([
+		yscale.domain()[1], groups[i].top(1)[0].value
+	    ])])
 
             // create the chart
             chart = barChart(q).dimension(dimensions[i])
@@ -89,9 +91,10 @@
 
         });
 
-        // Given our array of charts, which we assume are in the same order as the
-        // .chart elements in the DOM, bind the charts to the DOM and render them.
-        // We also listen to the chart's brush events to update the display.
+        // Given our array of charts, which we assume are in the same
+        // order as the .chart elements in the DOM, bind the charts to
+        // the DOM and render them.  We also listen to the chart's
+        // brush events to update the display.
         var chart = d3.selectAll(".catcorr.chart")
             .data(charts)
             .each(function(chart) {
@@ -105,7 +108,8 @@
             .append("aside")
             .attr("id", "totals")
             .attr("class", "catcorr")
-            .html("you've selected <br/> <span id='active'>-</span> <span>/</span> <span id='total'>-</span> <br/> respondents.")
+            .html("you've selected <br/> <span id='active'>-</span> "+
+		  "<span>/</span> <span id='total'>-</span> <br/> respondents.")
 
 
         // Render the total.
@@ -140,7 +144,7 @@
 
             var margin = {top: 10, right: 10, bottom: 20, left: 10},
             x,
-            y = yscales[barChart.id],
+            y = yscale,
             id = barChart.id++,
             axis = d3.svg.axis().orient("bottom").tickSize(6,0,0),
             brush = d3.svg.brush(),
@@ -155,12 +159,6 @@
 
                 // create ticks at these particular values
                 axis.tickValues(d3.range(0,d3.keys(x.labels).length));
-
-                // // don't rescale the y-axis. can always revert if it
-                // // becomes too difficult to see actual numbers, but
-                // // this is necessary in order to display bars for all
-                // // people.
-                // y.domain([0, group.top(1)[0].value]);
 
                 div.each(function() {
                     var div = d3.select(this),
