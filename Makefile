@@ -1,5 +1,9 @@
+.PHONY: example all test
 
 all: example catcorr.min.js
+
+test:
+	@npm test
 
 # set things up for the working example
 example: example/data.json example/d3.min.js example/crossfilter.min.js
