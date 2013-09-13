@@ -9,7 +9,7 @@ function catcorr(div_id, data) {
     // create the label2index lookup for quickly calculating the
     // x-coordinate on survey answers
     var label2index = {};
-    questions.forEach(function (q, i) {
+    questions.forEach(function (q) {
 	label2index[q.number] = {};
 	q.choices.forEach(function (choice, j) {
 	    label2index[q.number][choice] = j;
@@ -18,14 +18,14 @@ function catcorr(div_id, data) {
 
     // re-cast non-numeric answers into the corresponding number in
     // label2index so that this whole crossfilter bizness works
-    responses.forEach(function (r, i) {
-	questions.forEach(function (q, j) {
+    responses.forEach(function (r) {
+	questions.forEach(function (q) {
 	    r[q.number] = label2index[q.number][r[q.number]];
 	});
     });
 
     // add the questions text 
-    questions.forEach(function (q, i) {
+    questions.forEach(function (q) {
     	d3.select(div_id)
     	    .append("div")
     	    .attr("id", q.number+"-chart")
@@ -51,17 +51,14 @@ function catcorr(div_id, data) {
     // record the total number of respondents in each group. this is
     // used later to correctly figure out the proportionPath lines
     // below
-    groups.forEach(function (g, i) {
+    groups.forEach(function (g) {
     	g.__all__ = g.all().map(function (o) {return o.value});
     });
 
     // create a chart for each dimension
     var xscales = [], xscale, yscales = [], yscale;
     var charts = [], chart;
-    var bar_width = 80,
-    tick_label_width=bar_width,
-    tick_label_height=20,
-    first_pass;
+    var bar_width = 80;
     questions.forEach(function (q, i) {
 
     	// get the labels for this axis
