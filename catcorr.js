@@ -311,16 +311,76 @@
                     return path.join("");
                 }
 
+		// given that n of the N respondents have been
+		// selected, calculate the confidence intervals of the
+		// proportion of those n people in each bin.
+		function simulate(groups) {
+		    var N = d3.sum(group.__all__);
+		    var n = all.value();
+
+		    // TODO: should include hyperparameters here for
+		    // situations with very little data
+
+		    // create an array for bisection for fast
+		    // implementation. make sure last element is 1
+		    var p=[0];
+		    group.__all__.forEach(function (x) {
+			p.push( p[p.length-1] + x/N );
+		    });
+		    p.splice(0,1);
+		    p[p.length-1] = 1;
+
+		    // run 1000 simulations to see where these n
+		    // responses would likely fall
+		    var a, b, trial, x, results=[];
+		    for (a=0;a<100;a++) {
+			trial = {};
+			p.forEach(function (dummy, k) {
+			    trial[k] = 0;
+			});
+			for(b=0;b<n;b++) {
+			    trial[d3.bisect(p, Math.random())] += 1;
+			}
+			results.push(trial);
+		    }
+
+		    // calculate the confidence interval for each
+		    // grouping
+		    var confidence_intervals = [], lwr, upr;
+		    p.forEach(function (q, k) {
+			var all_ks = [];
+			results.forEach(function (trial) {
+			    all_ks.push(trial[k]);
+			});
+			all_ks.sort(d3.ascending);
+			lwr = all_ks[Math.floor(all_ks.length*(1-0.95)/2)];
+			upr = all_ks[Math.floor(all_ks.length*(1-(1-0.95)/2))];
+			confidence_intervals.push([lwr, upr]);
+		    });
+
+		    return confidence_intervals;
+		}
+
                 function proportionPath(groups) {
                     var path = [],
                     i = -1,
                     n = groups.length,
-                    g, p,
-                    a = all.value();
+                    g, p, lwr, upr,
+                    a = all.value(),
+		    confidence_intervals;
+		    if (a!=responses.length) {
+			var confidence_intervals = simulate(groups);
+		    }
                     while (++i < n) {
                         g = groups[i];
                         p = a/responses.length*group.__all__[i];
                         path.push("M", x(g.key-0.5), ",", y(p), "h", bar_width);
+			if (confidence_intervals) {
+			    lwr = confidence_intervals[i][0];
+			    upr = confidence_intervals[i][1];
+			    path.push("M", x(g.key), ",", y(lwr), 
+				      "v", y(upr)-y(lwr));
+			}
                     }
                     return path.join("");
                 }
