@@ -57,6 +57,7 @@
 
         // create a chart for each dimension
         var xscales = [], xscale, yscales = [], yscale;
+	var tooltips = [], tooltip;
         var charts = [], chart;
         var bar_width = 80;
         questions.forEach(function (q, i) {
@@ -66,6 +67,15 @@
             q.choices.forEach(function (choice, c) {
                 labels[c] = choice;
             });
+
+	    // initialize the tooltips if d3.tip is included
+	    if (d3.tip) {
+		tooltip = d3.tip()
+		    .attr('class', 'd3-tip')
+		    .direction('s')
+		    .html(function (d) {return "awesome " + d});
+		tooltips.push(tooltip);
+	    }
 
             // create the scale
             var a=0, b=q.choices.length-1;
@@ -141,6 +151,7 @@
             var margin = {top: 10, right: 10, bottom: 20, left: 10},
             x,
             y = yscales[barChart.id],
+	    tooltip = tooltips[barChart.id],
             id = barChart.id++,
             axis = d3.svg.axis().orient("bottom").tickSize(6,0,0),
             brush = d3.svg.brush(),
@@ -180,6 +191,11 @@
                             .append("g")
                             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+			// invoke tooltip for this visualization
+			if (tooltip) {
+			    g.call(tooltip);
+			}
+
                         g.append("clipPath")
                             .attr("id", "clip-" + id)
                             .append("rect")
@@ -210,20 +226,27 @@
                             .call(axis);
 
                         // manipulate the axis label text
-                        g.selectAll("g.axis text")
+                        var labels = g.selectAll("g.axis text")
                             .text(function (d) {
-                                var n = 20;
-                                var s = x.labels[d];
-                                if (s===undefined) {
-                                    return '';
-                                }
-                                else if (s.length > n) {
-                                    var parts = s.substring(0,n-3).split(" ");
-                                    s = parts.slice(0,parts.length-1).join(" ");
-                                    s += "...";
-                                }
-                                return s;
-                            })
+				var n = 20;
+				var s = x.labels[d];
+				if (s===undefined) {
+				    return '';
+				}
+				else if (s.length > n) {
+				    var parts = s.substring(0,n-3).split(" ");
+				    s = parts.slice(0,parts.length-1).join(" ");
+				    s += "...";
+				}
+				return s;
+			    });
+			if (tooltip) {
+			    tooltip.html(function (d) {
+				return x.labels[d];
+			    });
+			    labels.on("mouseover", tooltip.show)
+				.on("mouseout", tooltip.hide);
+			}
 
                         // Initialize the brush component with pretty
                         // resize handles.

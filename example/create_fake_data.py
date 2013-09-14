@@ -39,7 +39,7 @@ question_and_choice_list = [
     ("outcome", "I need a tablecloth and Perrier to properly digest lunch.", scale1to10),
     ("demographic", "Gender", ["Male", "Female"]),
     ("demographic", "Age", ["<20", "extremely old"]),
-    ("demographic", "Salary", ["$10/hr", "$30k/yr", "much more than that"]),
+    ("demographic", "Salary", ["$10/hr", "$30k/yr", "much much more than that"]),
 ]
 
 questions = []
