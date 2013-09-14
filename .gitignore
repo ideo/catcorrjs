@@ -18,6 +18,7 @@ npm-debug.log
 #Examples
 example/data.json
 example/d3.min.js
+example/d3.tip.min.js
 example/crossfilter.min.js
 
 node_modules/
