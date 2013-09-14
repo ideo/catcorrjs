@@ -318,22 +318,24 @@
 		    var N = d3.sum(group.__all__);
 		    var n = all.value();
 
-		    // TODO: should include hyperparameters here for
-		    // situations with very little data
-
 		    // create an array for bisection for fast
-		    // implementation. make sure last element is 1
-		    var p=[0];
+		    // implementation where the array p contains the
+		    // cumulative probability of choosing this
+		    // element. alpha is the hyperparameter of the
+		    // categorical distribution
+		    // (http://en.wikipedia.org/wiki/Categorical_distribution)
+		    var p=[0], alpha=1, pp;
 		    group.__all__.forEach(function (x) {
-			p.push( p[p.length-1] + x/N );
+			pp = (x + alpha)/(N + alpha*group.__all__.length)
+			p.push(p[p.length-1]+pp);
 		    });
 		    p.splice(0,1);
-		    p[p.length-1] = 1;
+		    p[p.length-1] = 1; // make sure last element is 1
 
 		    // run 1000 simulations to see where these n
 		    // responses would likely fall
 		    var a, b, trial, x, results=[];
-		    for (a=0;a<100;a++) {
+		    for (a=0;a<250;a++) {
 			trial = {};
 			p.forEach(function (dummy, k) {
 			    trial[k] = 0;
