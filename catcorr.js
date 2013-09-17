@@ -1,5 +1,5 @@
 (function (exports) {
-    catcorr.version = "0.1.0";
+    catcorr.version = "0.2.0";
 
     exports.catcorr = catcorr;
     function catcorr(div_id, data) {
@@ -331,7 +331,7 @@
 		// given that n of the N respondents have been
 		// selected, calculate the confidence intervals of the
 		// proportion of those n people in each bin.
-		function simulate(groups) {
+		function simulate() {
 		    var N = d3.sum(group.__all__);
 		    var n = all.value();
 
@@ -351,7 +351,7 @@
 
 		    // run 1000 simulations to see where these n
 		    // responses would likely fall
-		    var a, b, trial, x, results=[];
+		    var a, b, trial, results=[];
 		    for (a=0;a<250;a++) {
 			trial = {};
 			p.forEach(function (dummy, k) {
