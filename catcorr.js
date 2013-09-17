@@ -61,6 +61,7 @@
 	var tooltips = [], tooltip;
         var charts = [], chart;
         var bar_width = 80;
+	var bar_gap = 2;
         questions.forEach(function (q, i) {
 
             // get the labels for this axis
@@ -152,7 +153,7 @@
         function barChart(question) {
             if (!barChart.id) barChart.id = 0;
 
-            var margin = {top: 16, right: 10, bottom: 20, left: 10},
+            var margin = {top: 10, right: 10, bottom: 20, left: 10},
             x,
             y = yscale,
 	    tooltip = tooltips[barChart.id],
@@ -306,8 +307,8 @@
                     d;
                     while (++i < n) {
                         d = groups[i];
-                        path.push("M", x(d.key-0.5)+1, ",",
-                                  height, "V", y(d.value), "h",bar_width-2,
+                        path.push("M", x(d.key-0.5)+bar_gap, ",",
+                                  height, "V", y(d.value), "h",bar_width-2*bar_gap,
                                   "V", height);
                     }
                     return path.join("");
@@ -382,6 +383,14 @@
 			"L"+(-r*Math.cos(4*theta+theta0)+xc)+","+(-r*Math.sin(4*theta+theta0)-o-r);
 		}
 
+		function backer_box(xc) {
+		    return "M"+(xc-bar_width/2)+","+(-margin.top)+
+			"h"+bar_width+
+			"v"+(margin.top+y.range()+margin.bottom)+
+			"h"+(-bar_width)+
+			"Z";
+		}
+
                 function proportionPath(groups) {
 
 		    // remove all significance from before
@@ -400,7 +409,7 @@
                     while (++i < n) {
                         g = groups[i];
                         p = a/responses.length*group.__all__[i];
-                        path.push("M", x(g.key-0.5), ",", y(p), "h", bar_width);
+                        path.push("M", x(g.key-0.5)+bar_gap, ",", y(p), "h", bar_width-2*bar_gap);
 			if (confidence_intervals) {
 			    lwr = confidence_intervals[i][0];
 			    upr = confidence_intervals[i][1];
@@ -409,9 +418,9 @@
 
 			    // draw an asterisk above this bar
 			    if (g.value < lwr || upr < g.value) {
-				// svg.append("path")
-				//     .attr("class", "catcorr asterisk")
-				//     .attr("d", asterisk(x(g.key)));
+				svg.insert("path", "path.catcorr.all_bar")
+				    .attr("class", "catcorr asterisk")
+				    .attr("d", backer_box(x(g.key)));
 			    }
 			}
                     }

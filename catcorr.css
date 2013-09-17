@@ -33,7 +33,8 @@
 }
 
 .catcorr.asterisk {
-  stroke: black;
+  stroke: none;
+  fill: #eee;
 }
 
 .catcorr.all_proportion.all_bar {
