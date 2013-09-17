@@ -6,6 +6,8 @@
         var questions = data.questions;
         var responses = data.responses;
 
+	document.body.style.zoom="100%";
+
         // create the label2index lookup for quickly calculating the
         // x-coordinate on survey answers
         var label2index = {};
@@ -311,6 +313,12 @@
 		    if (brush.empty()) {
 			g.selectAll(".all_proportion.all_bar")
                             .attr("d", proportionPath);
+		    }
+
+		    // make sure the asterisk's don't exist on
+		    // dimensions that are selected
+		    else {
+			g.selectAll(".asterisk").remove();
 		    }
                 });
 
