@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700);
+/* @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700); */
 
 .catcorr.chart {
   display: inline-block;
@@ -12,21 +12,15 @@
   color: #ccc;
 }
 
-.catcorr.all_background.all_bar.outcome {
+.catcorr.all_background.all_bar.outcome, .catcorr.background.bar.outcome {
   fill: rgb(107,174,214);
 }
-.catcorr.background.bar.outcome {
-  fill: rgb(189,215,231);
-}
 .catcorr.foreground.bar.outcome, .brush rect.extent.outcome {
-  fill: rgb(49,130,189);
+  fill: rgb(49,130,189); 
 }
 
-.catcorr.all_background.all_bar.demographic {
+.catcorr.all_background.all_bar.demographic, .catcorr.background.bar.demographic {
   fill: rgb(116,196,118);
-}
-.catcorr.background.bar.demographic {
-  fill: rgb(186, 228, 179);
 }
 .catcorr.foreground.bar.demographic, .catcorr.brush rect.extent.demographic {
   fill: rgb(49, 163, 84);
@@ -35,11 +29,11 @@
 .catcorr.all_proportion.all_bar {
   stroke: white;
   stroke-width: 1;
-  /* stroke-dasharray: 9,5; */
 }
 
-.catcorr.brush rect.extent {
-  fill-opacity: .125;
+.catcorr.hatching {
+  stroke: black;
+  stroke-width: 0.2px;
 }
 
 .catcorr.axis path, .catcorr.axis line {

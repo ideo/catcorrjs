@@ -189,6 +189,18 @@
                             .append("g")
                             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+			// create a hatching pattern for displaying the brush
+			// http://stackoverflow.com/a/14500054/564709
+			var pattern = div.select("svg")
+			    .insert("pattern", "g")
+			    .attr("id", "diagonalHatch")
+			    .attr("patternUnits", "userSpaceOnUse")
+			    .attr("width", 10)
+			    .attr("height", 10);
+			pattern.append("path")
+			    .attr("class", "catcorr hatching")
+			    .attr("d", "M-1,1l2,-2M0,10l10,-10M9,11l2,-2");
+
 			// invoke tooltip for this visualization
 			if (tooltip) {
 			    g.call(tooltip);
@@ -252,6 +264,7 @@
                             .attr("class", "catcorr brush")
                             .call(brush);
                         gBrush.selectAll("rect")
+			    .attr("fill", "url(#diagonalHatch)")
                             .attr("height", height);
                         gBrush.selectAll(".resize")
                             .append("path")
