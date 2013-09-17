@@ -26,6 +26,11 @@
   fill: rgb(49, 163, 84);
 }
 
+.catcorr.asterisk {
+  stroke: none;
+  fill: #eee;
+}
+
 .catcorr.all_proportion.all_bar {
   stroke: white;
   stroke-width: 1;

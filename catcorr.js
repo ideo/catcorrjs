@@ -61,6 +61,7 @@
 	var tooltips = [], tooltip;
         var charts = [], chart;
         var bar_width = 80;
+	var bar_gap = 2;
         questions.forEach(function (q, i) {
 
             // get the labels for this axis
@@ -305,12 +306,12 @@
                         });
 
                     // render the .all_proportion.all_bar to show the
-                    // proportion of
+                    // proportion of selected responses that fall in
+                    // this group
 		    if (brush.empty()) {
 			g.selectAll(".all_proportion.all_bar")
                             .attr("d", proportionPath);
 		    }
-
                 });
 
                 function barPath(groups) {
@@ -320,23 +321,122 @@
                     d;
                     while (++i < n) {
                         d = groups[i];
-                        path.push("M", x(d.key-0.5)+1, ",",
-                                  height, "V", y(d.value), "h",bar_width-2,
+                        path.push("M", x(d.key-0.5)+bar_gap, ",",
+                                  height, "V", y(d.value), "h",bar_width-2*bar_gap,
                                   "V", height);
                     }
                     return path.join("");
                 }
 
+		// given that n of the N respondents have been
+		// selected, calculate the confidence intervals of the
+		// proportion of those n people in each bin.
+		function simulate(groups) {
+		    var N = d3.sum(group.__all__);
+		    var n = all.value();
+
+		    // create an array for bisection for fast
+		    // implementation where the array p contains the
+		    // cumulative probability of choosing this
+		    // element. alpha is the hyperparameter of the
+		    // categorical distribution
+		    // (http://en.wikipedia.org/wiki/Categorical_distribution)
+		    var p=[0], alpha=1, pp;
+		    group.__all__.forEach(function (x) {
+			pp = (x + alpha)/(N + alpha*group.__all__.length)
+			p.push(p[p.length-1]+pp);
+		    });
+		    p.splice(0,1);
+		    p[p.length-1] = 1; // make sure last element is 1
+
+		    // run 1000 simulations to see where these n
+		    // responses would likely fall
+		    var a, b, trial, x, results=[];
+		    for (a=0;a<250;a++) {
+			trial = {};
+			p.forEach(function (dummy, k) {
+			    trial[k] = 0;
+			});
+			for(b=0;b<n;b++) {
+			    trial[d3.bisect(p, Math.random())] += 1;
+			}
+			results.push(trial);
+		    }
+
+		    // calculate the confidence interval for each
+		    // grouping
+		    var confidence_intervals = [], lwr, upr;
+		    p.forEach(function (q, k) {
+			var all_ks = [];
+			results.forEach(function (trial) {
+			    all_ks.push(trial[k]);
+			});
+			all_ks.sort(d3.ascending);
+			lwr = all_ks[Math.floor(all_ks.length*(1-0.95)/2)];
+			upr = all_ks[Math.floor(all_ks.length*(1-(1-0.95)/2))];
+			confidence_intervals.push([lwr, upr]);
+		    });
+
+		    return confidence_intervals;
+		}
+
+		function asterisk(xc) {
+		    var theta=2*Math.PI/5;
+		    var theta0=Math.PI/2;
+		    var r=margin.top/4;
+		    var o=r;
+		    return "M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(0*theta+theta0)+xc)+","+(-r*Math.sin(0*theta+theta0)-o-r)+
+"M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(1*theta+theta0)+xc)+","+(-r*Math.sin(1*theta+theta0)-o-r)+
+			"M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(2*theta+theta0)+xc)+","+(-r*Math.sin(2*theta+theta0)-o-r)+
+			"M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(3*theta+theta0)+xc)+","+(-r*Math.sin(3*theta+theta0)-o-r)+
+			"M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(4*theta+theta0)+xc)+","+(-r*Math.sin(4*theta+theta0)-o-r);
+		}
+
+		function backer_box(xc) {
+		    return "M"+(xc-bar_width/2)+","+(-margin.top)+
+			"h"+bar_width+
+			"v"+(margin.top+y.range()+margin.bottom)+
+			"h"+(-bar_width)+
+			"Z";
+		}
+
                 function proportionPath(groups) {
+
+		    // remove all significance from before
+		    var svg=d3.select(this.parentNode);
+		    svg.selectAll(".asterisk").remove();
+
                     var path = [],
                     i = -1,
                     n = groups.length,
-                    g, p,
-                    a = all.value();
+                    g, p, lwr, upr,
+                    a = all.value(),
+		    confidence_intervals;
+		    if (a!=responses.length) {
+			var confidence_intervals = simulate(groups);
+		    }
                     while (++i < n) {
                         g = groups[i];
                         p = a/responses.length*group.__all__[i];
-                        path.push("M", x(g.key-0.5), ",", y(p), "h", bar_width);
+                        path.push("M", x(g.key-0.5)+bar_gap, ",", y(p), "h", bar_width-2*bar_gap);
+			if (confidence_intervals) {
+			    lwr = confidence_intervals[i][0];
+			    upr = confidence_intervals[i][1];
+			    path.push("M", x(g.key), ",", y(lwr), 
+				      "v", y(upr)-y(lwr));
+
+			    // draw an asterisk above this bar
+			    if (g.value < lwr || upr < g.value) {
+				svg.insert("path", "path.catcorr.all_bar")
+				    .attr("class", "catcorr asterisk")
+				    .attr("d", backer_box(x(g.key)));
+			    }
+			}
                     }
                     return path.join("");
                 }
