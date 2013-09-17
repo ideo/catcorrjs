@@ -152,7 +152,7 @@
         function barChart(question) {
             if (!barChart.id) barChart.id = 0;
 
-            var margin = {top: 10, right: 10, bottom: 20, left: 10},
+            var margin = {top: 16, right: 10, bottom: 20, left: 10},
             x,
             y = yscale,
 	    tooltip = tooltips[barChart.id],
@@ -291,7 +291,9 @@
                             return v;
                         });
 
-                    // render the .all_proportion.all_bar to show the proportion of
+                    // render the .all_proportion.all_bar to show the
+                    // proportion of selected responses that fall in
+                    // this group
                     g.selectAll(".all_proportion.all_bar")
                         .attr("d", proportionPath);
 
@@ -363,7 +365,29 @@
 		    return confidence_intervals;
 		}
 
+		function asterisk(xc) {
+		    var theta=2*Math.PI/5;
+		    var theta0=Math.PI/2;
+		    var r=margin.top/4;
+		    var o=r;
+		    return "M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(0*theta+theta0)+xc)+","+(-r*Math.sin(0*theta+theta0)-o-r)+
+"M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(1*theta+theta0)+xc)+","+(-r*Math.sin(1*theta+theta0)-o-r)+
+			"M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(2*theta+theta0)+xc)+","+(-r*Math.sin(2*theta+theta0)-o-r)+
+			"M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(3*theta+theta0)+xc)+","+(-r*Math.sin(3*theta+theta0)-o-r)+
+			"M"+xc+","+(-o-r)+
+			"L"+(-r*Math.cos(4*theta+theta0)+xc)+","+(-r*Math.sin(4*theta+theta0)-o-r);
+		}
+
                 function proportionPath(groups) {
+
+		    // remove all significance from before
+		    var svg=d3.select(this.parentNode);
+		    svg.selectAll(".asterisk").remove();
+
                     var path = [],
                     i = -1,
                     n = groups.length,
@@ -382,6 +406,13 @@
 			    upr = confidence_intervals[i][1];
 			    path.push("M", x(g.key), ",", y(lwr), 
 				      "v", y(upr)-y(lwr));
+
+			    // draw an asterisk above this bar
+			    if (g.value < lwr || upr < g.value) {
+				// svg.append("path")
+				//     .attr("class", "catcorr asterisk")
+				//     .attr("d", asterisk(x(g.key)));
+			    }
 			}
                     }
                     return path.join("");
