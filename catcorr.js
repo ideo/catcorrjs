@@ -291,9 +291,12 @@
                             return v;
                         });
 
-                    // render the .all_proportion.all_bar to show the proportion of
-                    g.selectAll(".all_proportion.all_bar")
-                        .attr("d", proportionPath);
+                    // render the .all_proportion.all_bar to show the
+                    // proportion of
+		    if (brush.empty()) {
+			g.selectAll(".all_proportion.all_bar")
+                            .attr("d", proportionPath);
+		    }
 
                 });
 
