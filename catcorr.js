@@ -6,8 +6,6 @@
         var questions = data.questions;
         var responses = data.responses;
 
-	document.body.style.zoom="100%";
-
         // create the label2index lookup for quickly calculating the
         // x-coordinate on survey answers
         var label2index = {};
@@ -117,12 +115,89 @@
 
         // add an <aside> element that displays fraction of elements
         // currently selected
-        d3.select(div_id)
+        var legend = d3.select(div_id)
             .append("aside")
-            .attr("id", "totals")
+            .attr("id", "legend")
             .attr("class", "catcorr")
-            .html("you've selected <br/> <span id='active'>-</span> "+
-		  "<span>/</span> <span id='total'>-</span> <br/> respondents.")
+            .html("<div style='clear:both;margin-top:20px'></div>"+
+		  "you've selected <br/> <span id='active'>-</span> "+
+		  "<span>/</span> <span id='total'>-</span> <br/> respondents");
+	var legend_width=200, legend_height=120;
+	var legend_svg = legend.insert("svg", "div")
+            .attr("width", legend_width)
+            .attr("height", legend_height)
+            .append("g")
+            .attr("transform", "translate(0,0)");
+
+	// draw the bars on the legend
+	legend_svg.selectAll(".bar")
+            .data(["all_background", "background", "foreground",
+                   "all_proportion"])
+            .enter().append("path")
+            .attr("class", function(d, i) {
+                if (i===0){
+                    return "catcorr "+d+" all_bar outcome";
+                }
+                else if(i===3) {
+                    return "catcorr "+d+" all_bar outcome";
+                }
+                return "catcorr "+d+" bar outcome";
+            });
+	legend_svg.select(".all_background.all_bar")
+	    .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",10,"v",100,"h",bar_width-2*bar_gap,"v",-100].join(""));
+	legend_svg.select(".foreground.bar")
+	    .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",80,"v",30,"h",bar_width-2*bar_gap,"v",-30].join(""));
+	legend_svg.select(".all_proportion.all_bar")
+	    .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",40,"h",bar_width-2*bar_gap, "M", legend_width/2,",",15,"v",44].join(""));
+
+	// display all respondents label
+	legend_svg.append("text")
+	    .attr("class", "catcorr legend")
+	    .attr("x", legend_width/2+bar_width/2+bar_gap)
+	    .attr("y", 10)
+	    .text("all");
+	legend_svg.append("path")
+	    .attr("class", "catcorr legend")
+	    .attr("d", ["M",legend_width/2+bar_width/2,",",7,
+			"h",-15,"l",-7,",",7].join(""));
+
+	// display selected respondents label
+	legend_svg.append("text")
+	    .attr("class", "catcorr legend")
+	    .attr("x", legend_width/2+bar_width/2+bar_gap)
+	    .attr("y", 116)
+	    .text("selected");
+	legend_svg.append("path")
+	    .attr("class", "catcorr legend")
+	    .attr("d", ["M",legend_width/2+bar_width/2,",",113,
+			"h",-15,"l",-7,",",-7].join(""));
+
+	// display expected selected respondents label
+	legend_svg.append("text")
+	    .attr("class", "catcorr legend")
+	    .attr("x", legend_width/2+bar_width/2+bar_gap)
+	    .attr("y", 50)
+	    .text("expected");
+	legend_svg.append("path")
+	    .attr("class", "catcorr legend")
+	    .attr("d", ["M",legend_width/2+bar_width/2,",",47,
+			"h",-15,"l",-7,",",-7].join(""));
+
+	// display variation in expected selected respondents label
+	legend_svg.append("text")
+	    .attr("class", "catcorr legend")
+	    .attr("x", legend_width/2-bar_width/2-20)
+	    .attr("y", 39)
+	    .attr("text-anchor", "end")
+	    .text("variation");
+	legend_svg.append("path")
+	    .attr("class", "catcorr legend")
+	    .attr("d", ["M",legend_width/2-bar_width/2-18,",",36,
+			"h",15,"v",22,"h",42,
+			"M",legend_width/2-bar_width/2-3,",",36,
+			"v",-22,"h",42].join(""));
+
+	    // .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",40,"h",bar_width-2*bar_gap, "M", legend_width/2,",",15,"v",45].join(""));
 
 
         // Render the total.
