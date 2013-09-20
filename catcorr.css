@@ -36,9 +36,10 @@
   stroke-width: 1;
 }
 
-.catcorr.hatching {
+.catcorr.hatching, rect.extent {
   stroke: black;
-  stroke-width: 0.2px;
+  stroke-width: 1px;
+  stroke-opacity: 0.25;
 }
 
 .catcorr.axis path, .catcorr.axis line, path.catcorr.legend {

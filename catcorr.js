@@ -61,7 +61,7 @@
 	var tooltips = [], tooltip;
         var charts = [], chart;
         var bar_width = 80;
-	var bar_gap = 2;
+	var bar_gap = 3;
         questions.forEach(function (q, i) {
 
             // get the labels for this axis
