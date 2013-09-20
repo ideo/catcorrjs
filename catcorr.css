@@ -51,6 +51,14 @@
   font: 10px sans-serif;
 }
 
+.catcorr.legend {
+  color: black;
+  text-align: left;
+}
+.catcorr.legend.right {
+  text-align: right;
+}
+
 path.catcorr.legend {
   stroke-dasharray: 2,2;
 }

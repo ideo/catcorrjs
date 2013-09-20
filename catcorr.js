@@ -120,9 +120,9 @@
             .attr("id", "legend")
             .attr("class", "catcorr")
             .html("<div style='clear:both;margin-top:20px'></div>"+
-		  "you've selected <br/> <span id='active'>-</span> "+
-		  "<span>/</span> <span id='total'>-</span> <br/> respondents");
-	var legend_width=200, legend_height=120;
+		  "<span id='active'>-</span> "+
+		  "<span>/</span> <span id='total'>-</span> <br/> selected respondents");
+	var legend_width=300, legend_height=120;
 	var legend_svg = legend.insert("svg", "div")
             .attr("width", legend_width)
             .attr("height", legend_height)
@@ -151,10 +151,12 @@
 	    .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",40,"h",bar_width-2*bar_gap, "M", legend_width/2,",",15,"v",44].join(""));
 
 	// display all respondents label
-	legend_svg.append("text")
+	legend_svg.append("foreignObject")
 	    .attr("class", "catcorr legend")
+	    .attr("width", (legend_width-bar_width)/2)
+	    .attr("height", "3em")
 	    .attr("x", legend_width/2+bar_width/2+bar_gap)
-	    .attr("y", 10)
+	    .attr("y", 0)
 	    .text("all respondents");
 	legend_svg.append("path")
 	    .attr("class", "catcorr legend")
@@ -162,10 +164,12 @@
 			"h",-15,"l",-7,",",7].join(""));
 
 	// display selected respondents label
-	legend_svg.append("text")
+	legend_svg.append("foreignObject")
 	    .attr("class", "catcorr legend")
+	    .attr("width", (legend_width-bar_width)/2)
+	    .attr("height", "3em")
 	    .attr("x", legend_width/2+bar_width/2+bar_gap)
-	    .attr("y", 116)
+	    .attr("y", 106)
 	    .text("selected respondents");
 	legend_svg.append("path")
 	    .attr("class", "catcorr legend")
@@ -173,10 +177,12 @@
 			"h",-15,"l",-7,",",-7].join(""));
 
 	// display expected selected respondents label
-	legend_svg.append("text")
+	legend_svg.append("foreignObject")
 	    .attr("class", "catcorr legend")
+	    .attr("width", (legend_width-bar_width)/2)
+	    .attr("height", "3em")
 	    .attr("x", legend_width/2+bar_width/2+bar_gap)
-	    .attr("y", 50)
+	    .attr("y", 35)
 	    .text("expected number of selected respondents");
 	legend_svg.append("path")
 	    .attr("class", "catcorr legend")
@@ -184,12 +190,14 @@
 			"h",-15,"l",-7,",",-7].join(""));
 
 	// display variation in expected selected respondents label
-	legend_svg.append("text")
-	    .attr("class", "catcorr legend")
-	    .attr("x", legend_width/2-bar_width/2-20)
-	    .attr("y", 39)
-	    .attr("text-anchor", "end")
-	    .text("variation in expected number of respondents");
+	legend_svg.append("foreignObject")
+	    .attr("class", "catcorr legend right")
+	    .attr("width", (legend_width-bar_width)/2-20)
+	    .attr("height", "5em")
+	    .attr("x", 0)
+	    .attr("y", 12)
+	    .attr("text-align", "right")
+	    .text("variation in expected number of selected respondents");
 	legend_svg.append("path")
 	    .attr("class", "catcorr legend")
 	    .attr("d", ["M",legend_width/2-bar_width/2-18,",",36,
