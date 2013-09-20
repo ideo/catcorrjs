@@ -3,7 +3,8 @@
 .catcorr.chart {
   display: inline-block;
   height: 151px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+  margin-right: 80px;
 }
 
 .catcorr.reset {
