@@ -41,14 +41,26 @@
   stroke-width: 0.2px;
 }
 
-.catcorr.axis path, .catcorr.axis line {
+.catcorr.axis path, .catcorr.axis line, path.catcorr.legend {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
 }
 
-.catcorr.axis text {
+.catcorr.axis text, .catcorr.legend {
   font: 10px sans-serif;
+}
+
+.catcorr.legend {
+  color: black;
+  text-align: left;
+}
+.catcorr.legend.right {
+  text-align: right;
+}
+
+path.catcorr.legend {
+  stroke-dasharray: 2,2;
 }
 
 .catcorr.brush .resize path {

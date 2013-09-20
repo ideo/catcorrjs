@@ -6,8 +6,6 @@
         var questions = data.questions;
         var responses = data.responses;
 
-	document.body.style.zoom="100%";
-
         // create the label2index lookup for quickly calculating the
         // x-coordinate on survey answers
         var label2index = {};
@@ -117,13 +115,139 @@
 
         // add an <aside> element that displays fraction of elements
         // currently selected
-        d3.select(div_id)
+        var legend = d3.select(div_id)
             .append("aside")
-            .attr("id", "totals")
+            .attr("id", "legend")
             .attr("class", "catcorr")
-            .html("you've selected <br/> <span id='active'>-</span> "+
-		  "<span>/</span> <span id='total'>-</span> <br/> respondents.")
+            .html("<div style='clear:both;margin-top:20px'></div>"+
+		  "<span id='active'>-</span> "+
+		  "<span>/</span> <span id='total'>-</span> <br/> selected respondents");
+	var legend_width=300, legend_height=120;
+	var legend_svg = legend.insert("svg", "div")
+            .attr("width", legend_width)
+            .attr("height", legend_height)
+            .append("g")
+            .attr("transform", "translate(0,0)");
 
+	// draw the bars on the legend
+	legend_svg.selectAll(".bar")
+            .data(["all_background", "background", "foreground",
+                   "all_proportion"])
+            .enter().append("path")
+            .attr("class", function(d, i) {
+                if (i===0){
+                    return "catcorr "+d+" all_bar outcome";
+                }
+                else if(i===3) {
+                    return "catcorr "+d+" all_bar outcome";
+                }
+                return "catcorr "+d+" bar outcome";
+            });
+	legend_svg.select(".all_background.all_bar")
+	    .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",10,"v",100,"h",bar_width-2*bar_gap,"v",-100].join(""));
+	legend_svg.select(".foreground.bar")
+	    .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",80,"v",30,"h",bar_width-2*bar_gap,"v",-30].join(""));
+	legend_svg.select(".all_proportion.all_bar")
+	    .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",40,"h",bar_width-2*bar_gap, "M", legend_width/2,",",15,"v",44].join(""));
+
+	// display all respondents label
+	legend_svg.append("foreignObject")
+	    .attr("class", "catcorr legend")
+	    .attr("width", (legend_width-bar_width)/2)
+	    .attr("height", "3em")
+	    .attr("x", legend_width/2+bar_width/2+bar_gap)
+	    .attr("y", 0)
+	    .text("all respondents");
+	legend_svg.append("path")
+	    .attr("class", "catcorr legend")
+	    .attr("d", ["M",legend_width/2+bar_width/2,",",7,
+			"h",-15,"l",-7,",",7].join(""));
+
+	// display selected respondents label
+	legend_svg.append("foreignObject")
+	    .attr("class", "catcorr legend")
+	    .attr("width", (legend_width-bar_width)/2)
+	    .attr("height", "3em")
+	    .attr("x", legend_width/2+bar_width/2+bar_gap)
+	    .attr("y", 106)
+	    .text("selected respondents");
+	legend_svg.append("path")
+	    .attr("class", "catcorr legend")
+	    .attr("d", ["M",legend_width/2+bar_width/2,",",113,
+			"h",-15,"l",-7,",",-7].join(""));
+
+	// display expected selected respondents label
+	legend_svg.append("foreignObject")
+	    .attr("class", "catcorr legend")
+	    .attr("width", (legend_width-bar_width)/2)
+	    .attr("height", "3em")
+	    .attr("x", legend_width/2+bar_width/2+bar_gap)
+	    .attr("y", 35)
+	    .text("expected number of selected respondents");
+	legend_svg.append("path")
+	    .attr("class", "catcorr legend")
+	    .attr("d", ["M",legend_width/2+bar_width/2,",",47,
+			"h",-15,"l",-7,",",-7].join(""));
+
+	// display variation in expected selected respondents label
+	legend_svg.append("foreignObject")
+	    .attr("class", "catcorr legend right")
+	    .attr("width", (legend_width-bar_width)/2-20)
+	    .attr("height", "5em")
+	    .attr("x", 0)
+	    .attr("y", 12)
+	    .attr("text-align", "right")
+	    .text("variation in expected number of selected respondents");
+	legend_svg.append("path")
+	    .attr("class", "catcorr legend")
+	    .attr("d", ["M",legend_width/2-bar_width/2-18,",",36,
+			"h",15,"v",22,"h",42,
+			"M",legend_width/2-bar_width/2-3,",",36,
+			"v",-22,"h",42].join(""));
+
+	    // .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",40,"h",bar_width-2*bar_gap, "M", legend_width/2,",",15,"v",45].join(""));
+
+	// if there are more than one type of question, render a
+	// legend for the colors
+	var question_types = d3.set();
+	questions.forEach(function (q) {
+	    question_types.add(q.type);
+	});
+	question_types = question_types.values();
+	if (question_types.length>1) {
+	    var swatch_w = 20, swatch_gap=5;
+	    legend.insert("div", "svg")
+		.style("clear", "both")
+	    var color_legend_svg = legend.insert("svg", "div")
+		.attr("width", legend_width)
+		.attr("height", question_types.length*(swatch_w+swatch_gap)+swatch_gap)
+		.style("margin-bottom", 20)
+		.append("g")
+		.attr("transform", "translate(0,0)");
+	    
+	    color_legend_svg.selectAll()
+		.data(question_types).enter()
+		.append("path")
+		.attr("class", function (d) {
+		    return "catcorr foreground bar "+d
+		})
+		.attr("d", function (d, i) {
+		    return ["M", legend_width/2-swatch_w/2, ",",
+			    swatch_gap+i*(swatch_w+swatch_gap),
+			    "h", swatch_w, "v", swatch_w, "h", -swatch_w]
+			.join("")
+		})
+	    color_legend_svg.selectAll()
+		.data(question_types).enter()
+		.append("text")
+		.attr("class", "catcorr legend")
+		.attr("x", legend_width/2+swatch_w/2 + bar_gap)
+		.attr("y", function (d, i) { 
+		    return swatch_gap + i*(swatch_w+swatch_gap) + swatch_w/2
+		})
+		.attr("dy", "0.35em")
+		.text(function (d) { return d});
+	}
 
         // Render the total.
         d3.selectAll("aside.catcorr #total")
