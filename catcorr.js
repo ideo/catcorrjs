@@ -155,7 +155,7 @@
 	    .attr("class", "catcorr legend")
 	    .attr("x", legend_width/2+bar_width/2+bar_gap)
 	    .attr("y", 10)
-	    .text("all");
+	    .text("all respondents");
 	legend_svg.append("path")
 	    .attr("class", "catcorr legend")
 	    .attr("d", ["M",legend_width/2+bar_width/2,",",7,
@@ -166,7 +166,7 @@
 	    .attr("class", "catcorr legend")
 	    .attr("x", legend_width/2+bar_width/2+bar_gap)
 	    .attr("y", 116)
-	    .text("selected");
+	    .text("selected respondents");
 	legend_svg.append("path")
 	    .attr("class", "catcorr legend")
 	    .attr("d", ["M",legend_width/2+bar_width/2,",",113,
@@ -177,7 +177,7 @@
 	    .attr("class", "catcorr legend")
 	    .attr("x", legend_width/2+bar_width/2+bar_gap)
 	    .attr("y", 50)
-	    .text("expected");
+	    .text("expected number of selected respondents");
 	legend_svg.append("path")
 	    .attr("class", "catcorr legend")
 	    .attr("d", ["M",legend_width/2+bar_width/2,",",47,
@@ -189,7 +189,7 @@
 	    .attr("x", legend_width/2-bar_width/2-20)
 	    .attr("y", 39)
 	    .attr("text-anchor", "end")
-	    .text("variation");
+	    .text("variation in expected number of respondents");
 	legend_svg.append("path")
 	    .attr("class", "catcorr legend")
 	    .attr("d", ["M",legend_width/2-bar_width/2-18,",",36,
