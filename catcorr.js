@@ -599,6 +599,31 @@
                         .attr("width", "100%");
                     dimension.filterAll();
                 }
+
+		// inspiration from http://bl.ocks.org/mbostock/6232537
+		else {
+		    if (d3.version < "3.3") return;
+
+		    // this is needed to make sure this doesn't
+		    // continuously cascade
+		    if (!d3.event.sourceEvent) return; 
+
+		    // transition the brush to a nice place
+		    var extent0 = brush.extent();
+		    var extent1 = extent0.map(function (v) {return d3.round(v+0.5)-0.5});
+		    
+		    // if empty when rounded, use floor & ceil instead
+		    if (extent1[0] >= extent1[1]) {
+		    	extent1[0] = Math.floor(extent0[0]+0.5)-0.5;
+		    	extent1[1] = Math.ceil(extent0[1]+0.5)-0.5;
+		    }
+		    
+		    d3.select(this).transition()
+		    	.call(brush.extent(extent1))
+		    	.call(brush.event);
+		}
+
+
             });
 
             // jasondavies fanciness. binding methods to this function
