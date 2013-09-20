@@ -286,7 +286,6 @@
             id = barChart.id++,
             axis = d3.svg.axis().orient("bottom").tickSize(6,0,0),
             brush = d3.svg.brush(),
-            brushDirty,
             dimension,
             group,
             round;
@@ -396,25 +395,6 @@
                         gBrush.selectAll(".resize")
                             .append("path")
                             .attr("d", resizePath);
-                    }
-
-                    // Only redraw the brush if set externally.
-                    if (brushDirty) {
-                        brushDirty = false;
-                        g.selectAll(".brush")
-                            .call(brush);
-                        div.select(".title a")
-                            .style("display", brush.empty() ? "none" : null);
-                        if (brush.empty()) {
-                            g.selectAll("#clip-" + id + " rect")
-                                .attr("x", 0)
-                                .attr("width", width);
-                        } else {
-                            var extent = brush.extent();
-                            g.selectAll("#clip-" + id + " rect")
-                                .attr("x", x(extent[0]))
-                                .attr("width", x(extent[1]) - x(extent[0]));
-                        }
                     }
 
                     // this is what actually uses the group data to set
@@ -652,7 +632,6 @@
                     brush.clear();
                     dimension.filterAll();
                 }
-                brushDirty = true;
                 return chart;
             };
             chart.group = function(_) {
