@@ -207,6 +207,47 @@
 
 	    // .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",40,"h",bar_width-2*bar_gap, "M", legend_width/2,",",15,"v",45].join(""));
 
+	// if there are more than one type of question, render a
+	// legend for the colors
+	var question_types = d3.set();
+	questions.forEach(function (q) {
+	    question_types.add(q.type);
+	});
+	question_types = question_types.values();
+	if (question_types.length>1) {
+	    var swatch_w = 20, swatch_gap=5;
+	    legend.insert("div", "svg")
+		.style("clear", "both")
+	    var color_legend_svg = legend.insert("svg", "div")
+		.attr("width", legend_width)
+		.attr("height", question_types.length*(swatch_w+swatch_gap)+swatch_gap)
+		.style("margin-bottom", 20)
+		.append("g")
+		.attr("transform", "translate(0,0)");
+	    
+	    color_legend_svg.selectAll()
+		.data(question_types).enter()
+		.append("path")
+		.attr("class", function (d) {
+		    return "catcorr foreground bar "+d
+		})
+		.attr("d", function (d, i) {
+		    return ["M", legend_width/2-swatch_w/2, ",",
+			    swatch_gap+i*(swatch_w+swatch_gap),
+			    "h", swatch_w, "v", swatch_w, "h", -swatch_w]
+			.join("")
+		})
+	    color_legend_svg.selectAll()
+		.data(question_types).enter()
+		.append("text")
+		.attr("class", "catcorr legend")
+		.attr("x", legend_width/2+swatch_w/2 + bar_gap)
+		.attr("y", function (d, i) { 
+		    return swatch_gap + i*(swatch_w+swatch_gap) + swatch_w/2
+		})
+		.attr("dy", "0.35em")
+		.text(function (d) { return d});
+	}
 
         // Render the total.
         d3.selectAll("aside.catcorr #total")
