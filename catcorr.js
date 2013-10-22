@@ -458,7 +458,7 @@
 		    // group. alpha is the hyperparameter of the
 		    // categorical distribution
 		    // http://en.wikipedia.org/wiki/Categorical_distribution
-		    var p=[], alpha=1, pp;
+		    var p=[], alpha=1;
 		    group.__all__.forEach(function (x) {
 			p.push((x + alpha)/(N + alpha*group.__all__.length));
 		    });
@@ -473,23 +473,6 @@
 		    });
 		    console.log(confidence_intervals);
 		    return confidence_intervals;
-		}
-
-		function asterisk(xc) {
-		    var theta=2*Math.PI/5;
-		    var theta0=Math.PI/2;
-		    var r=margin.top/4;
-		    var o=r;
-		    return "M"+xc+","+(-o-r)+
-			"L"+(-r*Math.cos(0*theta+theta0)+xc)+","+(-r*Math.sin(0*theta+theta0)-o-r)+
-"M"+xc+","+(-o-r)+
-			"L"+(-r*Math.cos(1*theta+theta0)+xc)+","+(-r*Math.sin(1*theta+theta0)-o-r)+
-			"M"+xc+","+(-o-r)+
-			"L"+(-r*Math.cos(2*theta+theta0)+xc)+","+(-r*Math.sin(2*theta+theta0)-o-r)+
-			"M"+xc+","+(-o-r)+
-			"L"+(-r*Math.cos(3*theta+theta0)+xc)+","+(-r*Math.sin(3*theta+theta0)-o-r)+
-			"M"+xc+","+(-o-r)+
-			"L"+(-r*Math.cos(4*theta+theta0)+xc)+","+(-r*Math.sin(4*theta+theta0)-o-r);
 		}
 
 		function backer_box(xc) {
