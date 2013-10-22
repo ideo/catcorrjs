@@ -129,6 +129,11 @@
             .append("g")
             .attr("transform", "translate(0,0)");
 
+	// add a clear div at the bottom as temporary fix for #18
+	d3.select(div_id)
+	    .append("div")
+	    .style("clear", "both");
+
 	// draw the bars on the legend
 	legend_svg.selectAll(".bar")
             .data(["all_background", "background", "foreground",
@@ -204,8 +209,6 @@
 			"h",15,"v",22,"h",42,
 			"M",legend_width/2-bar_width/2-3,",",36,
 			"v",-22,"h",42].join(""));
-
-	    // .attr("d", ["M",(legend_width-(bar_width-2*bar_gap))/2,",",40,"h",bar_width-2*bar_gap, "M", legend_width/2,",",15,"v",45].join(""));
 
 	// if there are more than one type of question, render a
 	// legend for the colors
