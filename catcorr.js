@@ -440,55 +440,38 @@
                     return path.join("");
                 }
 
-		// given that n of the N respondents have been
-		// selected, calculate the confidence intervals of the
-		// proportion of those n people in each bin.
-		function simulate() {
+		// previous versions simulated a random process 250
+		// times to estimate the 95% confidence
+		// intervals. This was all well and good, but the
+		// simulations were not exact and caused the interface
+		// to flicker (which is pretty confusing for
+		// users). This approach uses an approximation to
+		// estimate the 95% confidence interval, but because
+		// it is an exact solution it avoids the flickering
+		// problem
+		// http://stats.stackexchange.com/a/19142/31771
+		function calc_confidence_intervals() {
 		    var N = d3.sum(group.__all__);
 		    var n = all.value();
 
-		    // create an array for bisection for fast
-		    // implementation where the array p contains the
-		    // cumulative probability of choosing this
-		    // element. alpha is the hyperparameter of the
+		    // create an array of the probabilities for each
+		    // group. alpha is the hyperparameter of the
 		    // categorical distribution
-		    // (http://en.wikipedia.org/wiki/Categorical_distribution)
-		    var p=[0], alpha=1, pp;
+		    // http://en.wikipedia.org/wiki/Categorical_distribution
+		    var p=[], alpha=1, pp;
 		    group.__all__.forEach(function (x) {
-			pp = (x + alpha)/(N + alpha*group.__all__.length)
-			p.push(p[p.length-1]+pp);
-		    });
-		    p.splice(0,1);
-		    p[p.length-1] = 1; // make sure last element is 1
-
-		    // run 1000 simulations to see where these n
-		    // responses would likely fall
-		    var a, b, trial, results=[];
-		    for (a=0;a<250;a++) {
-			trial = {};
-			p.forEach(function (dummy, k) {
-			    trial[k] = 0;
-			});
-			for(b=0;b<n;b++) {
-			    trial[d3.bisect(p, Math.random())] += 1;
-			}
-			results.push(trial);
-		    }
-
-		    // calculate the confidence interval for each
-		    // grouping
-		    var confidence_intervals = [], lwr, upr;
-		    p.forEach(function (q, k) {
-			var all_ks = [];
-			results.forEach(function (trial) {
-			    all_ks.push(trial[k]);
-			});
-			all_ks.sort(d3.ascending);
-			lwr = all_ks[Math.floor(all_ks.length*(1-0.95)/2)];
-			upr = all_ks[Math.floor(all_ks.length*(1-(1-0.95)/2))];
-			confidence_intervals.push([lwr, upr]);
+			p.push((x + alpha)/(N + alpha*group.__all__.length));
 		    });
 
+		    var confidence_intervals = [], bound;
+		    p.forEach(function (pp) {
+			bound = 1.96*Math.sqrt((pp*(1-pp))/n);
+			confidence_intervals.push([
+			    n * Math.max(pp-bound, 0), 
+			    n * Math.min(pp+bound, 1)
+			]);
+		    });
+		    console.log(confidence_intervals);
 		    return confidence_intervals;
 		}
 
@@ -530,7 +513,7 @@
                     a = all.value(),
 		    confidence_intervals;
 		    if (a!=responses.length) {
-			var confidence_intervals = simulate(groups);
+			var confidence_intervals = calc_confidence_intervals()
 		    }
                     while (++i < n) {
                         g = groups[i];
