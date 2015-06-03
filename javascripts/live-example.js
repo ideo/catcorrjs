@@ -1,5 +1,5 @@
 // http://dataist.wordpress.com/2012/11/23/using-google-spreadsheet-as-a-database/
-d3.csv("https://docs.google.com/spreadsheet/pub?key=0AiojUCBHn7gJdGVHMVlubGxLbjNEOGZqdjBGX0l6THc&output=csv", function (error, rows) {
+d3.csv("data/questionairre_answers.csv", function (error, rows) {
 
     var data = {responses: [], questions: [
 	{number: 1, type: "outcome", text: "Which came first?", choices: ["Chicken", "Egg"]},
