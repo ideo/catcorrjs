@@ -18,6 +18,9 @@
 
         // re-cast non-numeric answers into the corresponding number in
         // label2index so that this whole crossfilter bizness works
+	// NOTE: This changes the underlying data passed in. In
+	// particular, if some choices are missing from questions,
+	// then those values in responses will get erased.
         responses.forEach(function (r) {
             questions.forEach(function (q) {
                 r[q.number] = label2index[q.number][r[q.number]];
