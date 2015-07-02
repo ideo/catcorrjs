@@ -16,6 +16,24 @@ module.exports = function(grunt) {
                 config: '.jscsrc'
             }
         },
+        concat: {
+            build: {
+                nonull: true,
+                options: {
+                    banner: ('(function (exports){\n' +
+                        'var catcorr = {\n' +
+                        '    version: \'<%= pkg.version %>\'\n' +
+                        '};\n'
+                    ),
+                    footer: '}();',
+                },
+                src: [
+                    'src/analysis.js',
+                    'src/render.js'
+                ],
+                dest: 'build/kk.js'
+            }
+        },
         uglify: {
             options: {
                 banner: (
@@ -30,7 +48,7 @@ module.exports = function(grunt) {
         },
         watch: {
             files: ['<%= jshint.files %>'],
-            tasks: ['jshint', 'jscs']
+            tasks: ['jshint', 'jscs', 'concat']
         }
     });
 
@@ -47,7 +65,7 @@ module.exports = function(grunt) {
         'jshint',
         'jscs',
         // 'compass',
-        // 'concat',
+        'concat',
         'uglify'
     ]);
 
