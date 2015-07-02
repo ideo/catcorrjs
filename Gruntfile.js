@@ -7,9 +7,19 @@ module.exports = function(grunt) {
             files: ['Gruntfile.js'],
             jshintrc: '.jshintrc'
         },
+        jscs: {
+            // src: ['Gruntfile.js'], 'src/**.js'],
+            src: ['Gruntfile.js'],
+            options: {
+                config: '.jscsrc'
+            }
+        },
         uglify: {
             options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                banner: (
+                    '/*! <%= pkg.name %> ' +
+                    '<%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                )
             },
             build: {
                 src: 'src/<%= pkg.name %>.js',
@@ -18,12 +28,9 @@ module.exports = function(grunt) {
         },
         watch: {
             files: ['<%= jshint.files %>'],
-            tasks: ['jshint']
-        },
+            tasks: ['jshint', 'jscs']
+        }
     });
-
-    if (grunt === null)
-      var x = true;
 
     // Load the plugins
     grunt.loadNpmTasks('grunt-contrib-compass');
@@ -31,10 +38,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-jscs');
 
     // Default task(s).
     grunt.registerTask('default', [
         'jshint',
+        'jscs',
         // 'compass',
         // 'concat',
         'uglify'
