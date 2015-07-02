@@ -29,7 +29,7 @@
             d3.select(div_id)
                 .append("div")
                 .attr("id", q.number+"-chart")
-                .attr("class", "catcorr chart")
+                .attr("class", "catcorr chart " + q.type)
                 .append("div")
                 .attr("class", "title")
                 .text(q.number+'. '+q.text);
