@@ -11,6 +11,12 @@
     "crossfilter": "~1.3.2"
   },
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-compass": "^1.0.3",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-contrib-watch": "^0.6.1",
     "vows": "0.7.x"
   },
   "scripts": {
@@ -18,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/freemarmoset/catcorrjs.git"
+    "url": "git://github.com/ideo/catcorrjs.git"
   },
   "keywords": [
     "visualization"
@@ -26,6 +32,6 @@
   "author": "Dean Malmgren",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/freemarmoset/catcorrjs/issues"
+    "url": "https://github.com/ideo/catcorrjs/issues"
   }
 }
