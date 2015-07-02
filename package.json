@@ -1,5 +1,5 @@
 {
-  "name": "catcorrjs",
+  "name": "catcorr",
   "version": "0.3.1",
   "description": "Visualize correlations across many dimensions of categorical data (e.g., from a survey)",
   "main": "catcorr.js",
