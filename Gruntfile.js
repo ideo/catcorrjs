@@ -4,7 +4,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
-            files: ['Gruntfile.js'],
+            files: ['Gruntfile.js', 'src/analysis.js', 'src/render.js'],
             options: {
                 reporter: require('jshint-stylish')
             },
@@ -20,12 +20,13 @@ module.exports = function(grunt) {
             build: {
                 nonull: true,
                 options: {
-                    banner: ('(function (exports){\n' +
+                    banner: (
+                        '(function (exports){\n' +
                         'var catcorr = {\n' +
                         '    version: \'<%= pkg.version %>\'\n' +
                         '};\n'
                     ),
-                    footer: '}();',
+                    footer: '}();'
                 },
                 src: [
                     'src/analysis.js',
