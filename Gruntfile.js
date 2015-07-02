@@ -5,11 +5,13 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
             files: ['Gruntfile.js'],
+            options: {
+                reporter: require('jshint-stylish')
+            },
             jshintrc: '.jshintrc'
         },
         jscs: {
-            // src: ['Gruntfile.js'], 'src/**.js'],
-            src: ['Gruntfile.js'],
+            src: ['<%= jshint.files %>'],
             options: {
                 config: '.jscsrc'
             }
