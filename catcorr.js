@@ -30,7 +30,7 @@
 
 	    groups.forEach(function(group){
 		var answers = matching_responses
-		    .map(function(r){ 
+		    .map(function(r){
 			return r[group.question.number];})
 		var counts = multi_count(answers);
 		group.all.forEach(function (o, k) {
@@ -48,7 +48,7 @@
 	// responses.
 	// question.number : [{key:choice, value: count},...]
 	// question.number : [{choice:"Male", count:20},...]
-	
+
 	// to initialize catcorr, we'll call
 	// get_histograms(everybody), In particular,
 	// get_matching_responses(responses) should just work when no
@@ -70,7 +70,7 @@
 					      value:v};}
 	out.all = _.map(out.counts, to_object);
 	out.__all__ = question.__all__;
-	out.top = function(){ 
+	out.top = function(){
 	    return d3.max(_.values(this.counts));
 	    // return the top response
 	}
@@ -80,7 +80,7 @@
 	out.question = question;
 	return out;
     }
-    
+
     function has_selection(){
 	// question needs to bind has_selection method
 	// question needs to maintain state of whether or not it has a
@@ -96,10 +96,10 @@
 	var person_choices = response[this.number];
 	var selected = this.selected_choices;
 	if (typeof(person_choices) === "number") {
-	    return _.contains(selected, 
+	    return _.contains(selected,
 			      person_choices);
 	} else {
-	    return _.any(person_choices, 
+	    return _.any(person_choices,
 			 function (person_choice){
 			     return _.contains(selected,
 					       person_choice)
@@ -151,11 +151,11 @@
 
         // add the questions text
         questions.forEach(function (q) {
-            d3.select(div_id)
+            q.div = d3.select(div_id)
                 .append("div")
                 .attr("id", q.number+"-chart")
-                .attr("class", "catcorr chart " + q.type)
-                .append("div")
+                .attr("class", "catcorr chart " + q.type);
+            q.div.append("div")
                 .attr("class", "title")
                 .text(q.number+'. '+q.text);
         });
@@ -191,7 +191,7 @@
 	// make the groups for the first time
 	catcorr.groups = init_groups(questions, responses);
 	catcorr.groups.update(responses)
-	
+
 
         // record the total number of respondents in each group. this is
         // used later to correctly figure out the proportionPath lines
@@ -314,7 +314,7 @@
 	legend_svg.select(".all_proportion.all_bar")
 	    .attr("d", ["M",
 			(legend_width-(bar_width-2*bar_gap))/2,
-			",",40,"h",bar_width-2*bar_gap, 
+			",",40,"h",bar_width-2*bar_gap,
 			"M", legend_width/2,",",15,"v",44].join(""));
 
 	// display all respondents label
@@ -385,12 +385,12 @@
 		.style("clear", "both")
 	    var color_legend_svg = legend.insert("svg", "div")
 		.attr("width", legend_width)
-		.attr("height", 
+		.attr("height",
 		      question_types.length*(swatch_w+swatch_gap)+swatch_gap)
 		.style("margin-bottom", 20)
 		.append("g")
 		.attr("transform", "translate(0,0)");
-	    
+
 	    color_legend_svg.selectAll()
 		.data(question_types).enter()
 		.append("path")
@@ -408,7 +408,7 @@
 		.append("text")
 		.attr("class", "catcorr legend")
 		.attr("x", legend_width/2+swatch_w/2 + bar_gap)
-		.attr("y", function (d, i) { 
+		.attr("y", function (d, i) {
 		    return swatch_gap + i*(swatch_w+swatch_gap) + swatch_w/2
 		})
 		.attr("dy", "0.35em")
@@ -453,6 +453,7 @@
             id = barChart.id++,
             axis = d3.svg.axis().orient("bottom").tickSize(6,0,0),
             brush = d3.svg.brush(),
+            gBrush,
             dimension,
             group,
             round;
@@ -555,7 +556,7 @@
 
                         // Initialize the brush component with pretty
                         // resize handles.
-                        var gBrush = g.append("g")
+                        gBrush = g.append("g")
                             .attr("class", "catcorr brush")
                             .call(brush);
                         gBrush.selectAll("rect")
@@ -619,8 +620,8 @@
 		// it is an exact solution it avoids the flickering
 		// problem
 		// http://stats.stackexchange.com/a/19142/31771
-		function calc_p(n_people_who_chose_this, 
-				n_total_responses, 
+		function calc_p(n_people_who_chose_this,
+				n_total_responses,
 				n_choices) {
 		    // in multichoice case, n_total_responses is
 		    // really the number of total checked boxes. We
@@ -629,7 +630,7 @@
 		    // multichoice case is != n_total_responses.
 
 		    var pseudocount = 1;
-		    return ((n_people_who_chose_this + pseudocount) / 
+		    return ((n_people_who_chose_this + pseudocount) /
 			    (n_total_responses + pseudocount*n_choices));
 		}
 
@@ -645,7 +646,7 @@
 		    var n = catcorr.groups[0].all.value();
 		    n = group.all.value();
 
-		    console.log("confidence", n, N);
+		    // console.log("confidence", n, N);
 		    // create an array of the probabilities for each
 		    // group. alpha is the hyperparameter of the
 		    // categorical distribution
@@ -664,7 +665,7 @@
 			// TODO Think carefully about whether this
 			// should be N or n here
 			return [
-			    n * Math.max(pp - get_bound(pp), 0), 
+			    n * Math.max(pp - get_bound(pp), 0),
 			    n * Math.min(pp + get_bound(pp), 1)
 			];})
 		    return confidence_intervals;
@@ -699,13 +700,13 @@
                         g = groups[i];
                         prob = calc_p(group.__all__[i], n_responses, n_choices);
 			expected = n_selected*prob;
-                        path.push("M", x(g.key-0.5)+bar_gap, ",", 
-				  y(expected), 
+                        path.push("M", x(g.key-0.5)+bar_gap, ",",
+				  y(expected),
 				  "h", bar_width-2*bar_gap);
 			if (confidence_intervals) {
 			    lwr = confidence_intervals[i][0];
 			    upr = confidence_intervals[i][1];
-			    path.push("M", x(g.key), ",", y(lwr), 
+			    path.push("M", x(g.key), ",", y(lwr),
 				      "v", y(upr)-y(lwr));
 
 			    // draw an asterisk above this bar
@@ -752,7 +753,7 @@
                 g.select("#clip-" + id + " rect")
                     .attr("x", x(extent[0]))
                     .attr("width", x(extent[1]) - x(extent[0]));
-		
+
 		// this is where we tell a question that it has some
 		// selected options
 		questions[id].selected_choices = extent_to_range(extent);
@@ -763,11 +764,11 @@
                 // dimension.filterRange(extent);
             });
 
-            brush.on("brushend.chart", function() {
+            brush.on("brushend.chart", brushend);
+
+            function brushend () {
                 if (brush.empty()) {
-                    var div = d3.select(this.parentNode
-					.parentNode
-					.parentNode);
+                    var div = questions[id].div;
                     div.select(".title a").style("display", "none");
                     div.select("#clip-" + id + " rect")
                         .attr("x", null)
@@ -790,26 +791,26 @@
 
 		    // this is needed to make sure this doesn't
 		    // continuously cascade
-		    if (!d3.event.sourceEvent) return; 
+		    if (!d3.event.sourceEvent) return;
 
 		    // transition the brush to a nice place
 		    var extent0 = brush.extent();
-		    var extent1 = extent0.map(function (v) 
+		    var extent1 = extent0.map(function (v)
 					      {return d3.round(v+0.5)-0.5});
-		    
+
 		    // if empty when rounded, use floor & ceil instead
 		    if (extent1[0] >= extent1[1]) {
 		    	extent1[0] = Math.floor(extent0[0]+0.5)-0.5;
 		    	extent1[1] = Math.ceil(extent0[1]+0.5)-0.5;
 		    }
-		    
+
 		    d3.select(this).transition()
 		    	.call(brush.extent(extent1))
 		    	.call(brush.event);
 		}
 
 
-            });
+            }
 
             // jasondavies fanciness. binding methods to this function
             chart.margin = function(_) {
@@ -835,12 +836,15 @@
                 return chart;
             };
             chart.filter = function(_) {
+                console.log(id, _)
                 if (_) {
                     brush.extent(_);
                     dimension.filterRange(_);
                 } else {
-                    brush.clear();
-                    dimension.filterAll();
+                    gBrush.call(brush.clear());
+                    // questions[id].selected_choices = [];
+                    // catcorr.groups.update(responses);
+                    brushend();
                 }
                 return chart;
             };
