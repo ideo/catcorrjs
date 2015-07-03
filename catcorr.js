@@ -609,64 +609,46 @@
                     return path.join("");
                 }
 
-		// previous versions simulated a random process 250
-		// times to estimate the 95% confidence
-		// intervals. This was all well and good, but the
-		// simulations were not exact and caused the interface
-		// to flicker (which is pretty confusing for
-		// users). This approach uses an approximation to
-		// estimate the 95% confidence interval, but because
-		// it is an exact solution it avoids the flickering
-		// problem
-		// http://stats.stackexchange.com/a/19142/31771
-		function calc_p(n_people_who_chose_this, 
-				n_total_responses, 
-				n_choices) {
-		    // in multichoice case, n_total_responses is
-		    // really the number of total checked boxes. We
-		    // probably care more about number of people who
-		    // chose this vs people who didnt -- which in the
-		    // multichoice case is != n_total_responses.
-
-		    var pseudocount = 1;
-		    return ((n_people_who_chose_this + pseudocount) / 
-			    (n_total_responses + pseudocount*n_choices));
-		}
-
-		function calc_confidence_intervals() {
+		function calc_confidence_intervals(n_selected) {
 		    // this is the number of total responses to the
 		    // question. if there's one-person one-vote, then
 		    // N is the number of people. In the multi-choice
 		    // case, though, it's the total number of votes
 		    // cast.
 		    var N = d3.sum(group.__all__);
-
-		    // not sure what this is being used for. TODO
-		    var n = catcorr.groups[0].all.value();
-		    n = group.all.value();
-
-		    console.log("confidence", n, N);
+		    N = responses.length;
+		    var k = get_k(responses, group)
+		    // console.log("confidence", n_selected, N);
 		    // create an array of the probabilities for each
 		    // group. alpha is the hyperparameter of the
 		    // categorical distribution
 		    // http://en.wikipedia.org/wiki/Categorical_distribution
 		    var p = group.__all__.map(function (x) {
-			return calc_p(x, N, group.__all__.length);
+			return calc_p(x, N, k);
 		    });
-
 		    var confidence_intervals, bound;
-
 		    var get_bound = function(pp){
-			return 1.96*Math.sqrt((pp*(1-pp))/n)
+			return 1.96*Math.sqrt((pp*(1-pp))/N);
 		    }
 
 		    confidence_intervals = p.map(function(pp,i){
 			// TODO Think carefully about whether this
 			// should be N or n here
 			return [
-			    n * Math.max(pp - get_bound(pp), 0), 
-			    n * Math.min(pp + get_bound(pp), 1)
+			    n_selected * Math.max(pp - get_bound(pp), 0), 
+			    n_selected * Math.min(pp + get_bound(pp), 1)
 			];})
+
+
+		    // debugging probabilities...
+		    var pizza = catcorr.debug[group.question.number];
+		    if (!pizza){
+		    	catcorr.debug[group.question.number] = {};
+		    	pizza = catcorr.debug[group.question.number];
+		    }
+		    pizza["conf"] = {"N":N, "k":k, "p":p,
+		    		     "confidence":confidence_intervals};
+
 		    return confidence_intervals;
 		}
 
@@ -678,41 +660,50 @@
 			"Z";
 		}
 
-                function proportionPath(groups) {
-
+                function proportionPath(answers) {
 		    // remove all significance from before
-		    var svg=d3.select(this.parentNode);
+		    var svg = d3.select(this.parentNode);
 		    svg.selectAll(".asterisk").remove();
 
                     var path = [],
                     i = -1,
-                    n_groups = groups.length,
-                    g, prob, expected, lwr, upr,
+                    n_answers = answers.length,
+                    answer, prob, expected, lwr, upr,
                     n_selected = catcorr.groups[0].all.value(),
 		    n_responses = responses.length,
 		    n_choices = group.__all__.length,
 		    confidence_intervals;
+
+		    fuck = answers;
+		    shit = group;
+
 		    if (n_selected!=responses.length) {
-			var confidence_intervals = calc_confidence_intervals()
+			var confidence_intervals = calc_confidence_intervals(n_selected)
 		    }
-                    while (++i < n_groups) {
-                        g = groups[i];
-                        prob = calc_p(group.__all__[i], n_responses, n_choices);
+
+                    while (++i < n_answers) {
+                        answer = answers[i];
+			n_choices = get_k(responses, group);
+                        prob = calc_p(group.__all__[i], n_responses, 
+				      n_choices);
 			expected = n_selected*prob;
-                        path.push("M", x(g.key-0.5)+bar_gap, ",", 
+			save_stuff(group, expected, confidence_intervals, 
+				   n_selected, prob, answers, i);
+
+                        path.push("M", x(answer.key-0.5)+bar_gap, ",", 
 				  y(expected), 
 				  "h", bar_width-2*bar_gap);
 			if (confidence_intervals) {
 			    lwr = confidence_intervals[i][0];
 			    upr = confidence_intervals[i][1];
-			    path.push("M", x(g.key), ",", y(lwr), 
+			    path.push("M", x(answer.key), ",", y(lwr), 
 				      "v", y(upr)-y(lwr));
 
 			    // draw an asterisk above this bar
-			    if (g.value < lwr || upr < g.value) {
+			    if (answer.value < lwr || upr < answer.value) {
 				svg.insert("path", "path.catcorr.all_bar")
 				    .attr("class", "catcorr asterisk")
-				    .attr("d", backer_box(x(g.key)));
+				    .attr("d", backer_box(x(answer.key)));
 			    }
 			}
                     }
@@ -883,4 +874,54 @@ function multi_count(answers){
     }
     // count singletons
     return _.countBy(answers);
+}
+
+function get_k(responses,group){
+    var k = group.__all__.length;
+    if (typeof(responses[0][group.question.number])==="object"){
+    	k = 2;
+    }
+    return k;
+}
+
+// previous versions simulated a random process 250
+// times to estimate the 95% confidence
+// intervals. This was all well and good, but the
+// simulations were not exact and caused the interface
+// to flicker (which is pretty confusing for
+// users). This approach uses an approximation to
+// estimate the 95% confidence interval, but because
+// it is an exact solution it avoids the flickering
+// problem
+// http://stats.stackexchange.com/a/19142/31771
+function calc_p(n_people_who_chose_this, 
+		n_total_responses, 
+		n_choices) {
+    // in multichoice case, n_total_responses is
+    // really the number of total checked boxes. We
+    // probably care more about number of people who
+    // chose this vs people who didnt -- which in the
+    // multichoice case is != n_total_responses.
+    
+    var pseudocount = 1;
+    return ((n_people_who_chose_this + pseudocount) / 
+	    (n_total_responses + pseudocount*n_choices));
+}
+
+catcorr.debug = {}
+function save_stuff(group, expected, confidence_intervals, N, p, answers, i){
+    var number = group.question.number;
+    if (confidence_intervals){
+	var c = confidence_intervals[i];
+	catcorr.debug[number][i] = [expected, c, N, p, group, answers, i];
+    }
+}
+
+function assert(){
+    // select "male"
+    var expected = catcorr.debug.S2[0]
+    var bounds = catcorr.debug.S2[1]
+    console.assert(Math.abs((bounds[0] - 63)) < 1)
+    console.assert(Math.abs((bounds[1] - 93)) < 1)
+    console.assert(Math.abs((expected - 78)) < 1)
 }
