@@ -610,15 +610,10 @@
                 }
 
 		function calc_confidence_intervals(n_selected) {
-		    // this is the number of total responses to the
-		    // question. if there's one-person one-vote, then
-		    // N is the number of people. In the multi-choice
-		    // case, though, it's the total number of votes
-		    // cast.
-		    var N = d3.sum(group.__all__);
-		    N = responses.length;
+		    // this is the number of total number of people
+		    var N = responses.length;
 		    var k = get_k(responses, group)
-		    // console.log("confidence", n_selected, N);
+
 		    // create an array of the probabilities for each
 		    // group. alpha is the hyperparameter of the
 		    // categorical distribution
@@ -628,7 +623,7 @@
 		    });
 		    var confidence_intervals, bound;
 		    var get_bound = function(pp){
-			return 1.96*Math.sqrt((pp*(1-pp))/N);
+			return 1.96*Math.sqrt((pp*(1-pp))/n_selected);
 		    }
 
 		    confidence_intervals = p.map(function(pp,i){
@@ -919,9 +914,10 @@ function save_stuff(group, expected, confidence_intervals, N, p, answers, i){
 
 function assert(){
     // select "male"
-    var expected = catcorr.debug.S2[0]
-    var bounds = catcorr.debug.S2[1]
-    console.assert(Math.abs((bounds[0] - 63)) < 1)
-    console.assert(Math.abs((bounds[1] - 93)) < 1)
-    console.assert(Math.abs((expected - 78)) < 1)
+    var germany = catcorr.debug.S2[0];
+    var expected = germany[0]
+    var bounds = germany[1]
+    console.assert(Math.abs((bounds[0] - 62.78)) < .01)
+    console.assert(Math.abs((bounds[1] - 92.71)) < .01)
+    console.assert(Math.abs(expected - 77.75)<.01)
 }
