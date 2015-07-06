@@ -108,7 +108,10 @@
     }
 
     exports.catcorr = catcorr;
-    function catcorr(div_id, data) {
+    function catcorr(div_id, data, callback) {
+	// callback is called after charts are rendered.
+
+
 	// #########################
 	// debugging --global
 	questions = data.questions;
@@ -420,6 +423,11 @@
             .text(formatNumber(responses.length));
 
         renderAll();
+
+	if (callback){
+	    callback();
+	}
+
 
         // Renders the specified chart or list.
         function render(method) {
