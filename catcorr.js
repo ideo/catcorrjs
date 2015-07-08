@@ -145,7 +145,7 @@
                 var choice = r[q.number];
 		if (typeof(choice) === "string"){
 		    r[q.number] = label2index[q.number][choice];
-		} else {
+		} else if (choice) {
 		    r[q.number] = choice.map(function(c){
 			return label2index[q.number][c];});
 		}
@@ -401,7 +401,7 @@
 		    return "catcorr foreground bar "+d
 		})
 		.attr("d", function (d, i) {
-		    return ["M", legend_width/2-swatch_w/2, ",",
+		    return ["M", swatch_w/2, ",",
 			    swatch_gap+i*(swatch_w+swatch_gap),
 			    "h", swatch_w, "v", swatch_w, "h", -swatch_w]
 			.join("")
@@ -410,7 +410,7 @@
 		.data(question_types).enter()
 		.append("text")
 		.attr("class", "catcorr legend")
-		.attr("x", legend_width/2+swatch_w/2 + bar_gap)
+		.attr("x", swatch_w*2 + bar_gap)
 		.attr("y", function (d, i) { 
 		    return swatch_gap + i*(swatch_w+swatch_gap) + swatch_w/2
 		})
