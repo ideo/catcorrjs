@@ -17,7 +17,7 @@
   fill: rgb(107,174,214);
 }
 .catcorr.foreground.bar.outcome, .brush rect.extent.outcome {
-  fill: rgb(49,130,189); 
+  fill: rgb(49,130,189);
 }
 
 .catcorr.all_background.all_bar.demographic, .catcorr.background.bar.demographic {
@@ -63,6 +63,13 @@
 
 path.catcorr.legend {
   stroke-dasharray: 2,2;
+}
+
+.catcorr.selected {
+  fill-opacity: 1;
+}
+.catcorr.not.selected {
+  fill-opacity: 0;
 }
 
 .catcorr.brush .resize path {

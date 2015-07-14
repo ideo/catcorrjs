@@ -562,17 +562,52 @@
 				.on("mouseout", tooltip.hide);
 			}
 
-                        // Initialize the brush component with pretty
-                        // resize handles.
-                        gBrush = g.append("g")
-                            .attr("class", "catcorr brush")
-                            .call(brush);
-                        gBrush.selectAll("rect")
+                        // // Initialize the brush component with pretty
+                        // // resize handles.
+                        // gBrush = g.append("g")
+                        //     .attr("class", "catcorr brush")
+                        //     .call(brush);
+                        // gBrush.selectAll("rect")
+			//     .attr("fill", "url(#diagonalHatch)")
+                        //     .attr("height", height);
+                        // gBrush.selectAll(".resize")
+                        //     .append("path")
+                        //     .attr("d", resizePath);
+
+			// initialize the selected regions to make
+			// things clickable
+			gSelected = g.selectAll(".catcorr.selected")
+			    .data(catcorr.groups[id].all)
+			    .enter()
+			    .append("rect")
+			    .attr("class", "catcorr not selected")
 			    .attr("fill", "url(#diagonalHatch)")
-                            .attr("height", height);
-                        gBrush.selectAll(".resize")
-                            .append("path")
-                            .attr("d", resizePath);
+			    .attr("x", function (d) {return x(d.key) - (0.5*bar_width - bar_gap)})
+			    .attr("width", bar_width-2*bar_gap)
+			    .attr("y", y.range()[1])
+			    .attr("height", y.range()[0])
+			    .on("click", update_selection);
+
+
+			function update_selection(d) {
+			    // enforce the toggling behavior to keep
+			    // track of which choices have been
+			    // selected at the data level
+			    var selected_index = questions[id].selected_choices.indexOf(d.key);
+			    if (selected_index > -1) {
+				questions[id].selected_choices.splice(selected_index, 1);
+				d3.select(this).classed("not", true);
+			    }
+			    else {
+				questions[id].selected_choices.push(d.key);
+				d3.select(this).classed("not", false);
+			    }
+
+			    catcorr.groups.update(responses)
+			    renderAll();
+
+			}
+
                     }
 
                     // this is what actually uses the group data to set
