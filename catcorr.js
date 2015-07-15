@@ -278,7 +278,7 @@
             .html("<div style='clear:both;margin-top:20px'></div>"+
 		  "<span id='active'>-</span> "+
 		  "<span>/</span> <span id='total'>-</span> <br/> selected respondents");
-	var legend_width=300, legend_height=120;
+	var legend_width=200, legend_height=120;
 	var legend_svg = legend.insert("svg", "div")
             .attr("width", legend_width)
             .attr("height", legend_height)
@@ -350,7 +350,7 @@
 	legend_svg.append("foreignObject")
 	    .attr("class", "catcorr legend")
 	    .attr("width", (legend_width-bar_width)/2)
-	    .attr("height", "3em")
+	    .attr("height", "5em")
 	    .attr("x", legend_width/2+bar_width/2+bar_gap)
 	    .attr("y", 35)
 	    .text("expected number of selected respondents");
@@ -600,6 +600,7 @@
 		    // dimensions that are selected
 		    else {
 			g.selectAll(".asterisk").remove();
+			g.selectAll(".fa").remove();
 		    }
                 });
 
@@ -667,6 +668,7 @@
 		    // remove all significance from before
 		    var svg = d3.select(this.parentNode);
 		    svg.selectAll(".asterisk").remove();
+		    svg.selectAll(".fa").remove();
 
                     var path = [],
                     i = -1,
@@ -704,9 +706,23 @@
 
 			    // draw an asterisk above this bar
 			    if (answer.value < lwr || upr < answer.value) {
+				// font-awesome arrow-up: "\f062"
+				// arrow-down: "\f063"
+				// trick from http://stackoverflow.com/questions/14984007/how-do-i-include-a-font-awesome-icon-in-my-svg
+
+				var hi_lo = "\uf062" // high
+				if (answer.value < lwr) {
+				    hi_lo = "\uf063" // lo;
+				}
 				svg.insert("path", "path.catcorr.all_bar")
 				    .attr("class", "catcorr asterisk")
 				    .attr("d", backer_box(x(answer.key)));
+				svg.append("text")
+				    .attr("font-size","70px")
+				    .attr("x",x(answer.key)-margin.left)
+				    .attr("y",margin.top+5)
+				    .attr("class", "fa")
+				    .text(hi_lo);
 			    }
 			}
                     }
