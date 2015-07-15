@@ -67,6 +67,14 @@ path.catcorr.legend {
 
 .catcorr.selected {
   fill-opacity: 1;
+  cursor: pointer;
+  stroke: black;
+  stroke-width: 1px;
+  stroke-opacity: 0;
+  transition: stroke-opacity 0.2s;
+}
+.catcorr.selected:hover {
+  stroke-opacity: 0.25;
 }
 .catcorr.not.selected {
   fill-opacity: 0;
